@@ -8,7 +8,7 @@ class Controller:
         self.__ct = ct
 
         """
-        #Recursivo
+        #Recursiv
         def enrute(self, origin, destine, visited):
                 if origin == destine:
                         return [destine]
