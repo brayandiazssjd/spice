@@ -1,8 +1,6 @@
-from City import City
+from CityController import CityController
 
+ct = CityController()
+a = ct.adjmatrix()
 
-c1 = City(10, 10, 10, "name", [""])
-c2 = c1
-c2.name = "0"
-
-print(c1.name)
+print(a)
