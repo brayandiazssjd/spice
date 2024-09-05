@@ -47,7 +47,7 @@ class Controller:
                 distance = self.__ct.idistance(origin, neigh[0]) + neigh[1]
                 if neigh[0] not in passed and distance > nearer[1]:
                     nearer = [neigh[0], distance]
-                    passed.append(neigh[0])
+                    passed.insert(0, neigh[0])
                 origin = nearer[0]
                 route.append(nearer[0])
         return route 
