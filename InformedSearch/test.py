@@ -42,7 +42,7 @@ def test_cdistance(city_controller):
 def test_enruteA(controller):
     try:
         print("ANTES DE ENROUTE")
-        route = controller.enruteA(0, 3)  # Ruta entre Amaime y Buga
+        route = controller.enruteA(23, 2)  # Ruta entre Amaime y Buga
         if len(route) > 0:
             print("test_enruteA PASSED")
             print(route)
@@ -53,7 +53,7 @@ def test_enruteA(controller):
 
 def test_enruteAA(controller):
     try:
-        route = controller.enruteAA(0, 1)  # Ruta entre Amaime y Buga
+        route = controller.enruteAA(23, 2)  # Ruta entre Amaime y Buga
         if len(route) > 0:
             print("test_enruteAA PASSED")
             print(route)

@@ -25,29 +25,31 @@ class Controller:
 
     def enruteA(self, origin, destine):
         route = []
-
+        passed = []
         while origin != destine:
+            # TODO: eliminar este condicional, no es necesario
             if not self.__matrix[origin]:  # Verifica si la lista es vacía o None
                 print(f"Error: No hay vecinos disponibles para la ciudad con id {origin}.")
                 return route
 
             for neigh in self.__matrix[origin]:
-                if neigh[0] not in route:  # or neigh[0] == origin
-                    route.append(neigh[0])
+                if neigh[0] not in passed:  # or neigh[0] == origin
+                    route.append(neigh)
+                    passed.insert(0, neigh[0])
                     origin = neigh[0]
                     break
         return route
 
     def enruteAA(self, origin: int, destiny: int):
-        route = []
-        passed = []
+        route = [origin]
+        passed = [origin]
         while origin != destiny:
-            nearer = [destiny, self.__ct.idistance(origin, destiny)]
+            nearer = [origin, self.__ct.idistance(origin, destiny)]
             for neigh in self.__matrix[origin]:
                 distance = self.__ct.idistance(origin, neigh[0]) + neigh[1]
-                if neigh[0] not in passed and distance > nearer[1]:
+                if neigh[0] not in passed and distance < nearer[1]:
                     nearer = [neigh[0], distance]
-                    passed.insert(0, neigh[0])
+                passed.insert(0, neigh[0])
                 origin = nearer[0]
                 route.append(nearer[0])
         return route 
