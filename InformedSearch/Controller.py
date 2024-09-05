@@ -43,13 +43,27 @@ class Controller:
     def enruteAA(self, origin: int, destiny: int):
         route = [origin]
         passed = [origin]
-        while origin != destiny:
-            nearer = [origin, self.__ct.idistance(origin, destiny)]
-            for neigh in self.__matrix[origin]:
-                distance = self.__ct.idistance(origin, neigh[0]) + neigh[1]
-                if neigh[0] not in passed and distance < nearer[1]:
-                    nearer = [neigh[0], distance]
-                passed.insert(0, neigh[0])
-                origin = nearer[0]
-                route.append(nearer[0])
+        k = 0
+        while  k < 10 and origin != destiny:
+            print(self.__ct.idistance(self.__matrix[origin][0][0], destiny)+self.__matrix[origin][0][1])
+            nearer = [self.__matrix[origin][0][0], 
+                        self.__ct.idistance(self.__matrix[origin][0][0], destiny)+self.__matrix[origin][0][1]]
+            for i in range(1, len(self.__matrix[origin])):
+                neigh = self.__matrix[origin][i]
+                print("$",neigh[0] not in passed)
+                distance = self.__ct.idistance(neigh[0], destiny) + neigh[1]
+                if neigh[0] not in passed:
+                    passed.insert(0, neigh[0])
+                    
+                    if distance < nearer[1]:
+                        nearer = [neigh[0], distance]
+                
+            origin = nearer[0]
+            route.append(nearer[0])
+            k += 1
+            print(passed)
         return route 
+
+    """
+
+    """
