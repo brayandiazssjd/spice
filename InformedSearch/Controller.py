@@ -27,12 +27,16 @@ class Controller:
         route = []
 
         while origin != destine:
+            if not self.__matrix[origin]:  # Verifica si la lista es vacía o None
+                print(f"Error: No hay vecinos disponibles para la ciudad con id {origin}.")
+                return route
+
             for neigh in self.__matrix[origin]:
-                if neigh[0] not in route: # or neigh[0] == origin
+                if neigh[0] not in route:  # or neigh[0] == origin
                     route.append(neigh[0])
                     origin = neigh[0]
                     break
-                return route
+        return route
 
     def enruteAA(self, origin: int, destiny: int):
         route = []

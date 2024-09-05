@@ -12,7 +12,7 @@ class CityController:
 
 	# Retorna la matrix de adjacenica con los pares (id, ditance)
 	def adjmatrix(self):
-		return [[[neigh.id, self.cdistance(city, neigh)] for neigh in city.neighs] for city in self.cities]
+		return [sorted([[neigh.id, self.cdistance(city, neigh)] for neigh in city.neighs], key=lambda x: x[1]) if city.neighs else [] for city in self.cities]
 
 	# Retorna una ciudad de acuerdo id o su nombre -> decidan
 	def idget(self, id):
