@@ -13,12 +13,12 @@ class CityController:
 	def adjmatrix(self):
 		return [sorted([[neigh.id, self.cdistance(city, neigh)] for neigh in city.neighs], key=lambda x: x[1]) if city.neighs else [] for city in self.cities]
 
-	# Retorna una ciudad de acuerdo id o su nombre -> decidan
+	# Retorna una ciudad de acuerdo id o su nombre
 	def idget(self, id):
 		return self.cities[id]
 
 	def idgetls(self, ls):
-		return [self.cities[i] for i in ls]
+		return [self.cities[i[0]] for i in ls]
 
 	def cdistance(self, origin: City, destiny: City):
 		return self.distance(origin.lat, origin.lat, destiny.lat, destiny.lon)
