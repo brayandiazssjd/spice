@@ -1,4 +1,3 @@
-from CityController import CityController
 
 #1 = City(10, 10, 10, "name", [""])
 #c2 = c1
@@ -8,6 +7,7 @@ from CityController import CityController
 
 from CityController import CityController
 from Controller import Controller
+from GUI import GUI
 
 def test_upload(city_controller):
     if len(city_controller.cities) == 30:
@@ -67,9 +67,11 @@ def test_enruteAA(controller):
 city_controller = CityController()
 city_controller.upload()
 controller = Controller(city_controller.adjmatrix(), city_controller)
+gui = GUI(city_controller)
 
 test_upload(city_controller)
 test_adjmatrix(city_controller)
 test_cdistance(city_controller)
 #test_enruteA(controller)
 test_enruteAA(controller)
+gui.draw_graph()
