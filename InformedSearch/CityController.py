@@ -18,7 +18,7 @@ class CityController:
 		return self.cities[id]
 
 	def idgetls(self, ls):
-		return [self.cities[i[0]] for i in ls]
+		return [self.cities[i] for i in ls]
 
 	def cdistance(self, origin: City, destiny: City):
 		return self.distance(origin.lat, origin.lat, destiny.lat, destiny.lon)
