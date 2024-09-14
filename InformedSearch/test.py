@@ -48,8 +48,11 @@ def test_enruteA(controller):
             print(route)
         else:
             print("test_enruteA FAILED: La ruta está vacía")
+
+        return route
     except Exception as e:
         print(f"test_enruteA FAILED: Ocurrió una excepción - {e}")
+        return None
 
 def test_enruteAA(controller):
     try:
@@ -59,19 +62,25 @@ def test_enruteAA(controller):
             print(route)
         else:
             print("test_enruteAA FAILED: La ruta está vacía")
+
+        return route
     except Exception as e:
         print(f"test_enruteAA FAILED: Ocurrió una excepción - {e}")
+        return None
 
 
 # Ejecutar pruebas
+routeA = []
 city_controller = CityController()
 city_controller.upload()
 controller = Controller(city_controller.adjmatrix(), city_controller)
-gui = GUI(city_controller)
 
 test_upload(city_controller)
 test_adjmatrix(city_controller)
 test_cdistance(city_controller)
 test_enruteA(controller)
 test_enruteAA(controller)
+routeA = test_enruteA(controller)
+
+gui = GUI(city_controller, routeA)
 gui.draw_graph()

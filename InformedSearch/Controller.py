@@ -59,7 +59,7 @@ class Controller:
 
 		while not pq and count < n:
 			edge = heapq.heappop(pq)
-			index = 
+			#index = 
 
 
 		return [mst, cost]
