@@ -42,7 +42,7 @@ def test_cdistance(city_controller):
 def test_enruteA(controller):
     try:
         print("ANTES DE ENROUTE")
-        route = controller.enruteA(23, 2)  # Ruta entre Amaime y Buga
+        route = controller.enruteA(23, 2)
         if len(route) > 0:
             print("test_enruteA PASSED")
             print(route)
@@ -56,7 +56,7 @@ def test_enruteA(controller):
 
 def test_enruteAA(controller):
     try:
-        route = controller.enruteAA(23, 2)  # Ruta entre Amaime y Buga
+        route = controller.enruteAA(23, 2)
         if len(route) > 0:
             print("test_enruteAA PASSED")
             print(route)
@@ -68,9 +68,20 @@ def test_enruteAA(controller):
         print(f"test_enruteAA FAILED: Ocurrió una excepción - {e}")
         return None
 
+def get_cities(routeId):
+    routeCities = []
+    for city_id in routeId:
+        if isinstance(city_id, list):  # Si city_id es una lista, algo salió mal
+            print(f"Error: city_id contiene una lista: {city_id}")
+        else:
+            city = city_controller.cities[city_id]  # Suponemos que city_id es un entero
+            routeCities.append(city.name)
+    return routeCities
+
 
 # Ejecutar pruebas
 routeA = []
+routeAA = []
 city_controller = CityController()
 city_controller.upload()
 controller = Controller(city_controller.adjmatrix(), city_controller)
@@ -80,7 +91,11 @@ test_adjmatrix(city_controller)
 test_cdistance(city_controller)
 test_enruteA(controller)
 test_enruteAA(controller)
-routeA = test_enruteA(controller)
+routeIdA = test_enruteA(controller)
+print(f"routeId: {routeIdA}")
+routeA = get_cities(routeIdA)
+routeIdAA = test_enruteAA(controller)
+routeAA = get_cities(routeIdAA)
 
-gui = GUI(city_controller, routeA)
+gui = GUI(city_controller, routeA, routeAA)
 gui.draw_graph()

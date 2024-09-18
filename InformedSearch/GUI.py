@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 
 class GUI:
 
-    def __init__(self, city_controller, route):
+    def __init__(self, city_controller, route, routeAA):
         self.city_controller = city_controller  # Recibe el controlador de ciudades
         self.route = route # Recibe la ruta
+        self.routeAA = routeAA
         self.g = nx.Graph()
 
     def create_graph(self):
@@ -44,7 +45,8 @@ class GUI:
         nx.draw_networkx_edge_labels(self.g, pos, edge_labels=edge_labels, font_size=7, label_pos=0.3)
 
         # Mostrar ruta utilizada
-        plt.text(0.5, -0.5, f"Ruta A: {self.route}", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
+        plt.text(0.40, 0.15, f"Ruta A: {self.route}", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
+        plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA}", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
 
         # Mostrar el grafo
         plt.show(block=True)

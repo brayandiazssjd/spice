@@ -22,7 +22,7 @@ class Controller:
 					diss.append(neigh[1])
 					origin = neigh[0]
 					break
-		return [ids, diss]
+		return ids
 
 	# Returna el par solución [[ids], [distances]] para A*
 	# TODO: optimize using a binary
@@ -48,7 +48,7 @@ class Controller:
 			origin = nearer[0][0]
 			ids.append(nearer[0][0])
 			diss.append(nearer[0][1])
-		return [ids, diss] 
+		return ids 
 
 	def lazy_prim(self):
 		mst = []
