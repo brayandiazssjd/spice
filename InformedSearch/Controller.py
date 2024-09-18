@@ -1,82 +1,116 @@
 from CityController import CityController
+
+import disjoint_set
 import heapq
 
 class Controller:
 
-	def __init__(self, matrix, ct: CityController):
-		self.__matrix = matrix
+	def __init__(self, ct: CityController):
+		self.__matrix = ct.adjmatrix()
 		self.__ct = ct
 
-	# Returna el par solución [[ids], [distances]] para A
-	# TODO: optimize using a binary passed list
-	# TODO: change return to [[cities: City], distance:int]
-	def enruteA(self, origin, destine): 
-		diss = []
-		passed = []
-		ids = []		
-		while origin != destine:
-			for neigh in self.__matrix[origin]:
-				if neigh[0] not in passed:  # or neigh[0] == origin
-					ids.append(neigh[0])
-					passed.insert(0, neigh[0])
-					diss.append(neigh[1])
-					origin = neigh[0]
+	# Returna el par solución para A
+	def enruteA(self, origin: int, destiny: int): 
+		dis = 0
+		visited = [False for i in range(30)]
+		visited[origin] = True
+		ids = [origin]
+ 		
+		k = 0
+		while origin != destiny and k < 20:
+			k+=1
+			
+			for edge in self.__matrix[origin]:
+				if edge.to == destiny:
+					return [ids, dis]
+				if not visited[edge.to]:
+					ids.append(edge.to)
+					visited[edge.to] = True
+					dis += edge.cost
+					origin = edge.to
 					break
-		return ids
 
-	# Returna el par solución [[ids], [distances]] para A*
-	# TODO: optimize using a binary
-	# TODO: change return to [[cities: City], distance:int]
-	# TODO: change index for sub list "[:]"
+		ids.append(destiny)
+		return [ids, dis]
+
 	def enruteAA(self, origin: int, destiny: int):
 		ids = [origin]
-		passed = [origin]
-		diss = []
-		
-		while origin != destiny:
-			neigh = self.__matrix[origin][0]
-			# nearer = [neighbour, distance from origin to neighbour]
-			nearer = [neigh,	self.__ct.idistance(neigh[0], destiny)]
-			for i in range(1, len(self.__matrix[origin])):
-				neigh = self.__matrix[origin][i]
-				distance = self.__ct.idistance(neigh[0], destiny)
+		visited = [False for i in range(30)]
+		visited[origin] = True
+		dis = 0
+		k = 0
+		while origin != destiny and k < 10:
+			k+= 1
+			edge = self.__matrix[origin][0]
 
-				if neigh[0] not in passed:
-					passed.insert(0, neigh[0])
-					if (distance + neigh[1]) < nearer[0][1] + nearer[1]:
-						nearer = [neigh, distance]
-			origin = nearer[0][0]
-			ids.append(nearer[0][0])
-			diss.append(nearer[0][1])
-		return ids 
+			nearer = [edge,	self.__ct.idistance(edge.to, destiny)]
 
-	def lazy_prim(self):
-		mst = []
-		count, cost = 0, 0
-		n = len(self.__matrix)
-		visited = [False for i in range(n)]
-		pq = []
-
-		while not pq and count < n:
-			edge = heapq.heappop(pq)
-			#index = 
+			for edge in self.__matrix[1:][origin]:
+				distance = self.__ct.idistance(edge.to, destiny)
+				if not visited[edge.to]:
+					visited[edge.to] = True
+					if (distance + edge.cost) < nearer[0].cost + nearer[1]:
+						nearer = [edge, distance]
+			origin = nearer[0].to
+			ids.append(nearer[0].to)
+			dis += nearer[0].cost
+			
+		return [ids, dis] 
 
 
-		return [mst, cost]
+	def prims_mst(self):
+		n = len(self.__matrix)  
+		adj_matrix = self.__matrix
+        
+		mst = []  
+		visited = [False] * n  
+		min_heap = [[0, 0]]  
 
-	def fast_prim(self):
-		mst = []
-		n = len(self.__matrix)-1
+		total_cost = 0  
+        
+		while len(mst) < n - 1:
+			weight, city_id = heapq.heappop(min_heap)
+			if visited[city_id]:
+				continue
+           
+			visited[city_id] = True
+			total_cost += weight
+			if weight != 0: 
+				mst.append((city_id, weight))
+			for edge in adj_matrix[city_id]:
+				neigh_id, edge_cost = edge.to, edge.cost
+				if not visited[neigh_id]:
+					heapq.heappush(min_heap, [edge_cost, neigh_id])
+		return mst, total_cost
 
+	"""def kruskal_mast(self):
+		n = len(self.cities)  # Number of cities (nodes)
+		adj_matrix = self.adjmatrix()
 
-		return mst
+		# List to store all edges in the graph
+		edges = []
+		for city_id, neighbors in enumerate(adj_matrix):
+			for edge in neighbors:
+				edges.append((edge.cost, city_id, edge.to))
+        
+        # Sort edges by cost (weight)
+				edges.sort()
 
-	def minor(self):
-		minor = self.__matrix[0][0]
-		for c in self.__matrix[1:]:
-			if c[0][1] < minor[1]:
-				minor = c[0]
-		return minor
+				# Initialize disjoint set for cycle detection
+		ds = DisjointSet(n)
 
-	def __addEdges(self, index):
-		pass
+				mst = []  # Store edges in the MST
+				total_cost = 0  # To store the total cost of the MST
+
+			for cost, u, v in edges:
+      # Check if u and v are in different sets to avoid cycles
+				if ds.find(u) != ds.find(v):
+                ds.union(u, v)
+                mst.append((u, v, cost))
+                total_cost += cost
+            
+            # Stop if we have n - 1 edges (MST for a connected graph)
+            if len(mst) == n - 1:
+                break
+
+        return mst, total_cost"""

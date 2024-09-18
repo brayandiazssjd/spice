@@ -1,11 +1,11 @@
 
 
 class City:
-    def __init__(self, id, lat, lon, name) -> None:
+    def __init__(self, id: int, lat, lon, name) -> None:
         self.name = name
         self.lat = lat
         self.lon = lon
-        self.id = id
+        self.id: int = id
 
     @property
     def neighs(self):

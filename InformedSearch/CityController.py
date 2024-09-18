@@ -1,7 +1,7 @@
 import math
 
 from City import City
-
+from Edge import Edge
 
 class CityController:
 
@@ -11,13 +11,13 @@ class CityController:
 
 	# Retorna la matrix de adjacenica con los pares (id, ditance)
 	def adjmatrix(self):
-		return [sorted([[neigh.id, self.cdistance(city, neigh)] for neigh in city.neighs], key=lambda x: x[1]) if city.neighs else [] for city in self.cities]
+		return [[Edge(neigh.id, self.cdistance(city, neigh)) for neigh in city.neighs] if city.neighs else [] for city in self.cities]
 
 	# Retorna una ciudad de acuerdo id o su nombre
-	def idget(self, id):
+	def get(self, id):
 		return self.cities[id]
 
-	def idgetls(self, ls):
+	def get_list(self, ls):
 		return [self.cities[i] for i in ls]
 
 	def cdistance(self, origin: City, destiny: City):
@@ -48,7 +48,7 @@ class CityController:
 		return distance_km
 		
 	# Calcula la distancia entre dos ciudades datos dos ids
-	def idistance(self, origin, destiny):
+	def idistance(self, origin: int, destiny: int):
 		org = self.cities[origin]
 		des = self.cities[destiny]
 		return self.distance(org.lat, org.lon, des.lat, des.lon)
