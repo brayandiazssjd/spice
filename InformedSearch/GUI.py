@@ -54,8 +54,8 @@ class GUI:
         # Mostrar información sobre las rutas y el MST
         plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
         plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-        plt.text(0.49, 0.05, f"PRIM MST: {self.mst_cities} (Costo total: {self.mst_total_cost})", ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
-
+        mst_text = f"PRIM MST: {', '.join(self.mst_cities)}\nCosto total: {self.mst_total_cost}"
+        plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
         # Mostrar el grafo
         plt.show(block=True)
 

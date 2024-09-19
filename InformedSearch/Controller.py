@@ -1,4 +1,5 @@
 from CityController import CityController
+from Edge import Edge
 
 import disjoint_set
 import heapq
@@ -125,74 +126,52 @@ class Controller:
 	def prims_mst(self):
 		n = len(self.__matrix)  
 		adj_matrix = self.__matrix
-
-		# Create an empty MST adjacency matrix
 		mst_adj_matrix = [[] for _ in range(n)]
-		total_cost = 0  # Total cost of the MST
-
-		# Min-heap (priority queue) for selecting the minimum cost edge
+		total_cost = 0 
 		min_heap = []
 		visited = [False] * n  # To track visited cities
-
-		# Start with city 0 (arbitrary choice)
 		visited[0] = True
+		# Añadir todas las aristas desde el nodo 0
 		for edge in adj_matrix[0]:
 			heapq.heappush(min_heap, (edge.cost, 0, edge.to))  # (cost, from_node, to_node)
-
+		
 		while min_heap:
 			cost, u, v = heapq.heappop(min_heap)
-
-			# If the destination node v has already been visited, skip this edge
 			if visited[v]:
 				continue
-
-			# Mark the destination node as visited
 			visited[v] = True
-
-			# Add the edge to the MST adjacency matrix
-			mst_adj_matrix[u].append(edge(v, cost))  # Use the Edge class to create an Edge object
-			mst_adj_matrix[v].append(edge(u, cost))  # Since the graph is undirected
+			# Aquí creamos el objeto Edge correctamente
+			mst_adj_matrix[u].append(Edge(v, cost))
+			mst_adj_matrix[v].append(Edge(u, cost))  # El grafo es no dirigido
 			total_cost += cost
-
-			# Explore the neighbors of the newly added node v
+			# Añadir las aristas de 'v' al heap
 			for edge in adj_matrix[v]:
 				if not visited[edge.to]:
 					heapq.heappush(min_heap, (edge.cost, v, edge.to))
-
+		
 		return mst_adj_matrix, total_cost
+
 
 	
 	# Kruskal's Algorithm for Minimum Spanning Tree
 	def kruskal_mst(self):
 		adj_matrix = self.__matrix
-		n = 30  # Number of cities (nodes)
-		
-		# Prepare the list of all edges
+		n = 30 
 		edges = []
 		for city_id, neighbors in enumerate(adj_matrix):
 			for edge in neighbors:
-				edges.append((edge.cost, city_id, edge.to))  # (cost, from_node, to_node)
-
-		# Sort edges by cost (ascending)
+				edges.append((edge.cost, city_id, edge.to)) 
 		edges.sort()
-
-		# Initialize DisjointSet to manage connected components
 		ds = disjoint_set.DisjointSet()
-
-		# Create a new adjacency matrix for the MST
 		mst_adj_matrix = [[] for _ in range(n)]
-		total_cost = 0  # Total cost of the MST
-
+		total_cost = 0 
 		for cost, u, v in edges:
-			# Check if u and v are in the same set (component)
 			if not ds.connected(u, v):
-				# If they are not connected, include this edge in the MST
 				ds.union(u, v)
-				# Add the edge to the MST adjacency matrix for both u and v
-				mst_adj_matrix[u].append(edge(v, cost))
-				mst_adj_matrix[v].append(edge(u, cost))  # Since the graph is undirected
+				# Crear correctamente el objeto Edge
+				mst_adj_matrix[u].append(Edge(v, cost))
+				mst_adj_matrix[v].append(Edge(u, cost)) 
 				total_cost += cost
-
 		return mst_adj_matrix, total_cost
 
 	"""def prims_mst(self):

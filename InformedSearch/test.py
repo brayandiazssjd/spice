@@ -98,12 +98,14 @@ def get_cities(route):
     city_names = [city_controller.cities[int(city_id)].name for city_id in ids]  # Obtenemos los nombres de las ciudades
     return city_names, total_distance
 
-def get_mst_cities(mst):
+def get_mst_cities(mst, city_controller):
     mst_cities = []
-    for city_id, weight in mst:
-        city = city_controller.cities[city_id]
-        mst_cities.append(city.name)
+    for edge_list in mst:
+        for edge in edge_list:  # Cada lista contiene múltiples objetos Edge
+            end_city = city_controller.cities[edge.to]  # Usamos `edge.to` para obtener la ciudad de destino
+            mst_cities.append(f"{end_city.name} (peso: {edge.cost})")  # Añadimos el nombre de la ciudad y el costo
     return mst_cities
+
 
 
 # Ejecutar pruebas
@@ -126,7 +128,7 @@ routeIdAA = test_enruteAA(controller)
 routeAA, total_distanceAA = get_cities(routeIdAA)
 
 mst, total_cost = controller.prims_mst()
-mst_cities = get_mst_cities(mst)
+mst_cities = get_mst_cities(mst, city_controller)
 
 gui = GUI(controller, routeA, routeAA, mst_cities, total_distanceA, total_distanceAA, total_cost)
 gui.draw_graph()
