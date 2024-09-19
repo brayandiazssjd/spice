@@ -68,7 +68,7 @@ def test_enruteAA(controller):
         print(f"test_enruteAA FAILED: Ocurrió una excepción - {e}")
         return None
 
-def get_cities(routeId):
+"""def get_cities(routeId):
     routeCities = []
     for city_id in routeId:
         if isinstance(city_id, list):  # Si city_id es una lista, algo salió mal
@@ -76,7 +76,34 @@ def get_cities(routeId):
         else:
             city = city_controller.cities[city_id]  # Suponemos que city_id es un entero
             routeCities.append(city.name)
-    return routeCities
+    return routeCities"""
+
+"""def get_cities(route):
+    ids, dis = route  # Desempaquetamos la lista de ids y la distancia total
+    routeCities = []
+    
+    for city_id in ids:  # Solo iteramos sobre los ids de las ciudades
+        city = city_controller.cities[int(city_id)]  # Nos aseguramos que city_id sea un entero
+        routeCities.append(city.name)
+    
+    print(f"Distancia total: {dis}")  # Si deseas mostrar la distancia total también
+    return routeCities"""
+
+def get_cities(route):
+    if not route or not route[0]:
+        print("No se encontró ninguna ruta.")
+        return [], 0  # Devuelve una lista vacía y 0 distancia si no hay ruta válida
+
+    ids, total_distance = route  # Desempaquetamos la lista de ids y la distancia total
+    city_names = [city_controller.cities[int(city_id)].name for city_id in ids]  # Obtenemos los nombres de las ciudades
+    return city_names, total_distance
+
+def get_mst_cities(mst):
+    mst_cities = []
+    for city_id, weight in mst:
+        city = city_controller.cities[city_id]
+        mst_cities.append(city.name)
+    return mst_cities
 
 
 # Ejecutar pruebas
@@ -84,18 +111,22 @@ routeA = []
 routeAA = []
 city_controller = CityController()
 city_controller.upload()
-controller = Controller(city_controller.adjmatrix(), city_controller)
+controller = Controller(city_controller)
 
 test_upload(city_controller)
 test_adjmatrix(city_controller)
 test_cdistance(city_controller)
 test_enruteA(controller)
 test_enruteAA(controller)
+# Ejecutar pruebas
 routeIdA = test_enruteA(controller)
-print(f"routeId: {routeIdA}")
-routeA = get_cities(routeIdA)
-routeIdAA = test_enruteAA(controller)
-routeAA = get_cities(routeIdAA)
+routeA, total_distanceA = get_cities(routeIdA)
 
-gui = GUI(city_controller, routeA, routeAA)
+routeIdAA = test_enruteAA(controller)
+routeAA, total_distanceAA = get_cities(routeIdAA)
+
+mst, total_cost = controller.prims_mst()
+mst_cities = get_mst_cities(mst)
+
+gui = GUI(controller, routeA, routeAA, mst_cities, total_distanceA, total_distanceAA, total_cost)
 gui.draw_graph()

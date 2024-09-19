@@ -1,6 +1,6 @@
 from CityController import CityController
 
-import disjoint_set
+#import disjoint_set
 import heapq
 
 class Controller:
@@ -10,7 +10,7 @@ class Controller:
 		self.__ct = ct
 
 	# Returna el par solución para A
-	def enruteA(self, origin: int, destiny: int): 
+	"""def enruteA(self, origin: int, destiny: int): 
 		dis = 0
 		visited = [False for i in range(30)]
 		visited[origin] = True
@@ -31,9 +31,35 @@ class Controller:
 					break
 
 		ids.append(destiny)
-		return [ids, dis]
+		return [ids, dis]"""
+	
+	# Greedy Best-First Search
+	def enruteA(self, start, goal):
+		adj_matrix = self.__matrix
+		n = 30  
+		min_heap = [(0, start)]  # (cost, node)
+		visited = [False] * n 
+		came_from = [-1] * n 
+		
+		while min_heap:
+			current_cost, current_node = heapq.heappop(min_heap)
+			if visited[current_node]:
+				continue
+			# Mark the current node as visited
+			visited[current_node] = True
+			# If we have reached the goal, we can reconstruct the path
+			if current_node == goal:
+				return self.reconstruct_path(came_from, start, goal), current_cost
+			# Explore neighbors
+			for edge in adj_matrix[current_node]:
+				if not visited[edge.to]:
+					heapq.heappush(min_heap, (edge.cost, edge.to))
+					came_from[edge.to] = current_node
+		
+		# If we exhaust the heap without finding a path, return None
+		return None, float('inf')
 
-	def enruteAA(self, origin: int, destiny: int):
+	"""def enruteAA(self, origin: int, destiny: int):
 		ids = [origin]
 		visited = [False for i in range(30)]
 		visited[origin] = True
@@ -55,7 +81,46 @@ class Controller:
 			ids.append(nearer[0].to)
 			dis += nearer[0].cost
 			
-		return [ids, dis] 
+		return [ids, dis] """
+	
+	# Function to reconstruct the path from start to goal
+	def reconstruct_path(self, came_from, start, goal):
+		path = []
+		current = goal
+		while current != start:
+			path.append(current)
+			current = came_from[current]
+		path.append(start)
+		path.reverse()
+		return path
+
+	def enruteAA(self, start, goal):
+		adj_matrix = self.__matrix
+		n = 30	
+		min_heap = [(0, start)]  # (edge cost + heuristic distance, node)
+		visited = [False] * n  # To track visited nodes
+		came_from = [-1] * n  # To reconstruct the path
+
+		while min_heap:
+			current_priority, current_node = heapq.heappop(min_heap)
+			if visited[current_node]:
+				continue
+			visited[current_node] = True
+			if current_node == goal:
+				return self.reconstruct_path(came_from, start, goal), current_priority
+			for edge in adj_matrix[current_node]:
+				neighbor = edge.to
+				edge_cost = edge.cost
+
+				if not visited[neighbor]:
+					heuristic_to_goal = self.__ct.idistance(neighbor, goal)
+					priority = edge_cost + heuristic_to_goal
+					# Record the path and push the neighbor to the heap
+					came_from[neighbor] = current_node
+					heapq.heappush(min_heap, (priority, neighbor))
+
+		# If the goal was not reached, return None
+		return None, float('inf')
 
 
 	def prims_mst(self):
