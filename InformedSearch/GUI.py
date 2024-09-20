@@ -59,6 +59,20 @@ class GUI:
         # Mostrar el grafo
         plt.show(block=True)
 
+    def draw_path(self, route, title="Resultado del Algoritmo"):
+            plt.figure(figsize=(19, 9))
+            self.create_graph()
+            pos = nx.get_node_attributes(self.g, 'pos')  # Obtener las posiciones para dibujar
+
+            # Dibujar solo el camino
+            if route:
+                route_edges = [(route[i], route[i + 1]) for i in range(len(route) - 1)]
+                route_subgraph = self.g.edge_subgraph(route_edges)
+                nx.draw(route_subgraph, pos, with_labels=True, node_size=300, node_color='red', font_size=7, edge_color='blue')
+
+            plt.title(title)
+            plt.show(block=True)
+
     """def __init__(self, city_controller, routeA, routeAA, mst_cities, total_distanceA, total_distanceAA, mst_total_cost):
             self.city_controller = city_controller
             self.routeA = routeA
