@@ -20,6 +20,7 @@ def main_menu():
     city_controller = CityController()
     city_controller.upload()
     controller = Controller(city_controller)
+    verificar = 0 #Para verificar si es el algoritmo de Dijkstra o A*
 
     while True:
         print("\n--- Menú ---")
@@ -27,9 +28,11 @@ def main_menu():
         print("2. Ejecutar A* Search (AA)")
         print("3. Ejecutar Algoritmo de Prim (MST)")
         print("4. Ejecutar Algoritmo de Kruskal (MST)")
-        print("5. Salir")
+        print("5. Ejecutar Dijkstra")
+        print("6. Ejecutar Bellman Ford")
+        print("7. Salir")
 
-        choice = input("Seleccione una opción (1-5): ")
+        choice = input("Seleccione una opción (1-7): ")
 
         if choice == '1':
             start = int(input("Ingrese el nodo de inicio: "))
@@ -39,6 +42,7 @@ def main_menu():
             mst = None
             mst_cities = []
             mst_total_cost = 0
+        
         elif choice == '2':
             start = int(input("Ingrese el nodo de inicio: "))
             goal = int(input("Ingrese el nodo de destino: "))
@@ -47,6 +51,7 @@ def main_menu():
             mst = None
             mst_cities = []
             mst_total_cost = 0
+
         elif choice == '3':
             mst, total_cost = controller.prims_mst()
             route_names = []
@@ -54,6 +59,7 @@ def main_menu():
             route = ([], 0)
             mst_cities = get_mst_cities(mst, city_controller)
             mst_total_cost = total_cost
+        
         elif choice == '4':
             mst, total_cost = controller.kruskal_mst()
             route_names = []
@@ -61,14 +67,36 @@ def main_menu():
             route = ([], 0)
             mst_cities = get_mst_cities(mst, city_controller)
             mst_total_cost = total_cost
-        elif choice == '5':
+
+        elif choice == '5': #Dijkstra  
+            start = int(input("Ingrese el nodo de inicio: "))
+            goal = int(input("Ingrese el nodo de destino: "))
+            total_distance = 0
+            route = controller.dijkstra(start, goal)
+            route_names, total_distance = get_cities(route)
+            mst = None
+            mst_cities = []
+            mst_total_cost = 0
+
+        elif choice == '6': #Bellman Formd  
+            start = int(input("Ingrese el nodo de inicio: "))
+            goal = int(input("Ingrese el nodo de destino: "))
+            total_distance = 0
+            route = controller.bellman(start, goal)
+            route_names, total_distance = get_cities(route)
+            mst = None
+            mst_cities = []
+            mst_total_cost = 0
+        
+        elif choice == '7': 
             break
+
         else:
             print("Opción inválida. Por favor, intente de nuevo.")
             continue
 
         # Mostrar el resultado en la GUI
-        gui = GUI(controller, route_names, route_names, mst_cities, total_distance, total_distance, mst_total_cost)
+        gui = GUI(controller, route_names, route_names, mst_cities, total_distance, total_distance, mst_total_cost, choice)
         gui.draw_graph()
 
 def get_cities(route):

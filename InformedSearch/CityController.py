@@ -13,6 +13,9 @@ class CityController:
 	def adjmatrix(self):
 		return [[Edge(neigh.id, self.cdistance(city, neigh)) for neigh in city.neighs] if city.neighs else [] for city in self.cities]
 
+	def adjmatrix2(self):
+		return [sorted([[neigh.id, self.cdistance(city, neigh)] for neigh in city.neighs], key=lambda x: x[1]) if city.neighs else [] for city in self.cities]
+	
 	# Retorna una ciudad de acuerdo id o su nombre
 	def get(self, id):
 		return self.cities[id]
