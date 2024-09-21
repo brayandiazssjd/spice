@@ -32,7 +32,7 @@ class GUI:
         
         self.g = G  # Asigna el grafo creado a self.g para usarlo en draw_graph()
 
-    def draw_graph(self):
+    def draw_graph(self, route=None):
         # Declarar el tamaño de la ventana
         plt.figure(figsize=(19, 9))
 
@@ -40,17 +40,30 @@ class GUI:
         self.create_graph()
         pos = nx.get_node_attributes(self.g, 'pos')  # Obtener las posiciones para dibujar
 
-        # Dibujar los nodos (ciudades)
-        nx.draw(self.g, pos, with_labels=True, node_size=300, node_color='green', font_size=7)
+        # Crear una lista para asignar colores a los nodos
+        if route:
+            # Si se proporciona una ruta, los nodos de esa ruta se pintan de verde
+            node_colors = ['green' if node in route else 'blue' for node in self.g.nodes()]
+        else:
+            # Si no hay ruta, todos los nodos se pintan de azul
+            node_colors = 'blue'
+
+        # Dibujar el grafo completo con nodos y aristas
+        nx.draw(self.g, pos, with_labels=True, node_size=300, node_color=node_colors, font_size=7)
 
         # Dibujar las aristas (conexiones) con los pesos (distancias)
         edge_labels = nx.get_edge_attributes(self.g, 'weight')
 
         # Redondear los valores de las distancias a 2 decimales
         edge_labels = {k: f'{v:.2f}' for k, v in edge_labels.items()}
-        
+
         # Dibujar los pesos de las aristas con un tamaño de letra menor y una mejor posición
         nx.draw_networkx_edge_labels(self.g, pos, edge_labels=edge_labels, font_size=7, label_pos=0.3)
+
+        # Resaltar las aristas de la ruta en rojo si existe una ruta
+        if route:
+            route_edges = [(route[i], route[i + 1]) for i in range(len(route) - 1)]
+            nx.draw_networkx_edges(self.g, pos, edgelist=route_edges, edge_color='red', width=2)
 
         # Mostrar información sobre las rutas y el MST
         if self.choice == '5': #Aunque dice routeA es la ruta de Bellman, es simplemente el nombre que escogimos para asignar
@@ -69,6 +82,7 @@ class GUI:
             plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
             # Mostrar el grafo
             plt.show(block=True)
+
 
     def draw_path(self, route, title="Resultado del Algoritmo"):
             plt.figure(figsize=(19, 9))
@@ -106,8 +120,7 @@ class GUI:
                 
         self.g = G  # Asigna el grafo creado a self.g para usarlo en draw_graph()
 
-    def draw_graph(self):
-
+        def draw_graph(self):
         # Declarar el tamaño de la ventana
         plt.figure(figsize=(19, 9))
 
@@ -127,10 +140,10 @@ class GUI:
         # Dibujar los pesos de las aristas con un tamaño de letra menor y una mejor posición
         nx.draw_networkx_edge_labels(self.g, pos, edge_labels=edge_labels, font_size=7, label_pos=0.3)
 
-        # Mostrar ruta utilizada
+        # Mostrar información sobre las rutas y el MST
         plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
         plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-        plt.text(0.49, 0.05, f"PRIM MST: {self.mst_cities} (Costo total: {self.mst_total_cost})", ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
-
+        mst_text = f"PRIM MST: {', '.join(self.mst_cities)}\nCosto total: {self.mst_total_cost}"
+        plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
         # Mostrar el grafo
         plt.show(block=True)"""
