@@ -53,7 +53,7 @@ def main_menu():
             route_names = []
             total_distance = 0
             route = ([], 0)
-            mst_cities = get_mst_cities(mst, city_controller)
+            route_names = get_mst_cities(mst, city_controller)
             mst_total_cost = total_cost
         
         elif choice == '4':
@@ -61,7 +61,7 @@ def main_menu():
             route_names = []
             total_distance = 0
             route = ([], 0)
-            mst_cities = get_mst_cities(mst, city_controller)
+            route_names = get_mst_cities(mst, city_controller)
             mst_total_cost = total_cost
 
         elif choice == '5': #Dijkstra  
@@ -92,6 +92,8 @@ def main_menu():
             continue
 
         # Mostrar el resultado en la GUI
+        #print("Nombres de nodos en el grafo:", self.g.nodes())
+        print("Nombres en route_names:", route_names)
         gui = GUI(controller, mst_total_cost)
         gui.draw_graph(route_names)
 
@@ -106,11 +108,13 @@ def get_cities(route):
 
 def get_mst_cities(mst, city_controller):
     mst_cities = []
-    for edge_list in mst:
-        for edge in edge_list:  # Cada lista contiene múltiples objetos Edge
-            end_city = city_controller.cities[edge.to]  # Usamos `edge.to` para obtener la ciudad de destino
-            mst_cities.append(f"{end_city.name} (peso: {edge.cost})")  # Añadimos el nombre de la ciudad y el costo
+    for u, edges in enumerate(mst):  # u representa el nodo origen
+        start_city_name = city_controller.cities[u].name  # Ciudad origen
+        for edge in edges:
+            end_city_name = city_controller.cities[edge.to].name  # Ciudad destino
+            mst_cities.append((start_city_name, end_city_name))  # Añadir la conexión origen-destino
     return mst_cities
 
 if __name__ == "__main__":
+
     main_menu()
