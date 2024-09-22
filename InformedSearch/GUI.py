@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 
 class GUI:
 
-    def __init__(self, controller, routeA, routeAA, mst_cities, total_distanceA, total_distanceAA, mst_total_cost, choice):
+    def __init__(self, controller, mst_total_cost=None):
         self.controller = controller
-        self.routeA = routeA
+        """self.routeA = routeA
         self.routeAA = routeAA
         self.mst_cities = mst_cities
         self.total_distanceA = total_distanceA
         self.total_distanceAA = total_distanceAA
+        self.choice = choice"""
         self.mst_total_cost = mst_total_cost
-        self.choice = choice
         self.g = nx.Graph()
 
     def create_graph(self):
@@ -66,22 +66,13 @@ class GUI:
             nx.draw_networkx_edges(self.g, pos, edgelist=route_edges, edge_color='red', width=2)
 
         # Mostrar información sobre las rutas y el MST
-        if self.choice == '5': #Aunque dice routeA es la ruta de Bellman, es simplemente el nombre que escogimos para asignar
-            plt.text(0.40, 0.15, f"Ruta Dijkstra: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-            # Mostrar el grafo
-            plt.show(block=True)
-        
-        elif self.choice == '6':
-            plt.text(0.40, 0.15, f"Ruta Bellman: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-            plt.show(block=True)
+        #plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
+        #plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
+        mst_text = f"Costo total: {self.mst_total_cost}"
+        plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
 
-        else:
-            plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-            plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-            mst_text = f"PRIM MST: {', '.join(self.mst_cities)}\nCosto total: {self.mst_total_cost}"
-            plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
-            # Mostrar el grafo
-            plt.show(block=True)
+        # Mostrar el grafo
+        plt.show(block=True)
 
 
     def draw_path(self, route, title="Resultado del Algoritmo"):

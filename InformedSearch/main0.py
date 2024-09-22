@@ -5,10 +5,6 @@ from Controller import Controller
 # Ruta preferente por lo mejor
 ct = CityController()
 c = Controller(ct)
-for edges in c.prims_mst()[0]:
-	for edge in edges:
-		print(edge.to)
-	print("--")
 
 # Ruta preferente por la distacia "lineal" más corta
 # main.py
@@ -96,8 +92,8 @@ def main_menu():
             continue
 
         # Mostrar el resultado en la GUI
-        gui = GUI(controller, route_names, route_names, mst_cities, total_distance, total_distance, mst_total_cost, choice)
-        gui.draw_graph()
+        gui = GUI(controller, mst_total_cost)
+        gui.draw_graph(route_names)
 
 def get_cities(route):
     if not route or not route[0]:
