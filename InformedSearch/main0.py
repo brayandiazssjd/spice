@@ -93,7 +93,7 @@ def main_menu():
 
         # Mostrar el resultado en la GUI
         #print("Nombres de nodos en el grafo:", self.g.nodes())
-        print("Nombres en route_names:", route_names)
+        print("RUTA:", route_names)
         gui = GUI(controller, mst_total_cost)
         gui.draw_graph(route_names)
 
@@ -107,13 +107,14 @@ def get_cities(route):
     return city_names, total_distance
 
 def get_mst_cities(mst, city_controller):
-    mst_cities = []
+    mst_cities = set()  # Usamos un conjunto para evitar duplicados
     for u, edges in enumerate(mst):  # u representa el nodo origen
         start_city_name = city_controller.cities[u].name  # Ciudad origen
+        mst_cities.add(start_city_name)  # Añadir ciudad origen al conjunto
         for edge in edges:
             end_city_name = city_controller.cities[edge.to].name  # Ciudad destino
-            mst_cities.append((start_city_name, end_city_name))  # Añadir la conexión origen-destino
-    return mst_cities
+            mst_cities.add(end_city_name)  # Añadir ciudad destino al conjunto
+    return list(mst_cities)  # Convertir el conjunto de vuelta a una lista
 
 if __name__ == "__main__":
 

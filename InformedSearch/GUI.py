@@ -40,6 +40,10 @@ class GUI:
         self.create_graph()
         pos = nx.get_node_attributes(self.g, 'pos')  # Obtener las posiciones para dibujar
 
+        for city in route:
+            if city not in pos:
+                print(f"Ciudad {city} no tiene posición en el diccionario pos.")
+
         # Crear una lista para asignar colores a los nodos
         if route:
             # Si se proporciona una ruta, los nodos de esa ruta se pintan de verde
@@ -63,6 +67,12 @@ class GUI:
         # Resaltar las aristas de la ruta en rojo si existe una ruta
         if route:
             route_edges = [(route[i], route[i + 1]) for i in range(len(route) - 1)]
+
+            for edge in route_edges:
+                city1, city2 = edge
+                if city1 not in pos or city2 not in pos:
+                    print(f"Error: La arista {city1} -> {city2} no tiene posiciones en el diccionario pos y no se dibujará.")
+
             nx.draw_networkx_edges(self.g, pos, edgelist=route_edges, edge_color='red', width=2)
 
         # Mostrar información sobre las rutas y el MST
