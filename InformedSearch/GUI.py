@@ -75,6 +75,8 @@ class GUI:
 
             nx.draw_networkx_edges(self.g, pos, edgelist=route_edges, edge_color='red', width=2)
 
+        print("Route:", route)
+
         # Mostrar información sobre las rutas y el MST
         #plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
         #plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)

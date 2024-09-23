@@ -54,6 +54,10 @@ def main_menu():
             total_distance = 0
             route = ([], 0)
             route_names = get_mst_cities(mst, city_controller)
+            """print("MST Adjacency Matrix:")
+            for i, neighbors in enumerate(mst):
+                for edge in neighbors:
+                    print(f"From {i} to {edge.to} with cost {edge.cost}")"""
             mst_total_cost = total_cost
         
         elif choice == '4':
@@ -93,7 +97,8 @@ def main_menu():
 
         # Mostrar el resultado en la GUI
         #print("Nombres de nodos en el grafo:", self.g.nodes())
-        print("RUTA:", route_names)
+        #print_original_graph(city_controller.adjmatrix())
+        #compare_graphs(city_controller.adjmatrix(), mst)
         gui = GUI(controller, mst_total_cost)
         gui.draw_graph(route_names)
 
@@ -115,6 +120,19 @@ def get_mst_cities(mst, city_controller):
             end_city_name = city_controller.cities[edge.to].name  # Ciudad destino
             mst_cities.add(end_city_name)  # Añadir ciudad destino al conjunto
     return list(mst_cities)  # Convertir el conjunto de vuelta a una lista
+
+"""def compare_graphs(original_adj_matrix, mst_adj_matrix):
+    for u, neighbors in enumerate(mst_adj_matrix):
+        for edge in neighbors:
+            if not any(edge.to == v.to and edge.cost == v.cost for v in original_adj_matrix[u]):
+                print(f"Error: Edge from {u} to {edge.to} with cost {edge.cost} is not in the original graph.")
+
+
+def print_original_graph(adjmatrix):
+    for u, neighbors in enumerate(adjmatrix):
+        for edge in neighbors:
+            print(f"From {u} to {edge.to} with cost {edge.cost}")"""
+
 
 if __name__ == "__main__":
 
