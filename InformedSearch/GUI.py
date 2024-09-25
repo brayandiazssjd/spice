@@ -32,59 +32,42 @@ class GUI:
         
         self.g = G  # Asigna el grafo creado a self.g para usarlo en draw_graph()
 
-    def draw_graph(self, route=None):
-        # Declarar el tamaño de la ventana
-        plt.figure(figsize=(19, 9))
+def draw_graph(self, route=None, mst_edges=None):
+    # Declarar el tamaño de la ventana
+    plt.figure(figsize=(19, 9))
 
-        # Crear el grafo y asignar posiciones
-        self.create_graph()
-        pos = nx.get_node_attributes(self.g, 'pos')  # Obtener las posiciones para dibujar
+    # Crear el grafo y asignar posiciones
+    self.create_graph()
+    pos = nx.get_node_attributes(self.g, 'pos')  # Obtener las posiciones para dibujar
 
-        for city in route:
-            if city not in pos:
-                print(f"Ciudad {city} no tiene posición en el diccionario pos.")
+    # Crear una lista para asignar colores a los nodos
+    if route:
+        node_colors = ['green' if node in route else 'blue' for node in self.g.nodes()]
+    else:
+        node_colors = 'blue'
 
-        # Crear una lista para asignar colores a los nodos
-        if route:
-            # Si se proporciona una ruta, los nodos de esa ruta se pintan de verde
-            node_colors = ['green' if node in route else 'blue' for node in self.g.nodes()]
-        else:
-            # Si no hay ruta, todos los nodos se pintan de azul
-            node_colors = 'blue'
+    # Dibujar el grafo completo con nodos y aristas
+    nx.draw(self.g, pos, with_labels=True, node_size=300, node_color=node_colors, font_size=7)
 
-        # Dibujar el grafo completo con nodos y aristas
-        nx.draw(self.g, pos, with_labels=True, node_size=300, node_color=node_colors, font_size=7)
+    # Dibujar las aristas (conexiones) con los pesos (distancias)
+    edge_labels = nx.get_edge_attributes(self.g, 'weight')
+    edge_labels = {k: f'{v:.2f}' for k, v in edge_labels.items()}
+    nx.draw_networkx_edge_labels(self.g, pos, edge_labels=edge_labels, font_size=7, label_pos=0.3)
 
-        # Dibujar las aristas (conexiones) con los pesos (distancias)
-        edge_labels = nx.get_edge_attributes(self.g, 'weight')
+    # Resaltar las aristas del MST en rojo si existe un MST
+    if mst_edges:
+        for edge in mst_edges:
+            city1, city2 = edge
+            if city1 in pos and city2 in pos:  # Verifica que las ciudades estén en el grafo
+                nx.draw_networkx_edges(self.g, pos, edgelist=[(city1, city2)], edge_color='red', width=2)
 
-        # Redondear los valores de las distancias a 2 decimales
-        edge_labels = {k: f'{v:.2f}' for k, v in edge_labels.items()}
+    # Mostrar información sobre el costo total del MST
+    mst_text = f"Costo total: {self.mst_total_cost}"
+    plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
 
-        # Dibujar los pesos de las aristas con un tamaño de letra menor y una mejor posición
-        nx.draw_networkx_edge_labels(self.g, pos, edge_labels=edge_labels, font_size=7, label_pos=0.3)
+    # Mostrar el grafo
+    plt.show(block=True)
 
-        # Resaltar las aristas de la ruta en rojo si existe una ruta
-        if route:
-            route_edges = [(route[i], route[i + 1]) for i in range(len(route) - 1)]
-
-            for edge in route_edges:
-                city1, city2 = edge
-                if city1 not in pos or city2 not in pos:
-                    print(f"Error: La arista {city1} -> {city2} no tiene posiciones en el diccionario pos y no se dibujará.")
-
-            nx.draw_networkx_edges(self.g, pos, edgelist=route_edges, edge_color='red', width=2)
-
-        print("Route:", route)
-
-        # Mostrar información sobre las rutas y el MST
-        #plt.text(0.40, 0.15, f"Ruta A: {self.routeA} (Distancia total: {self.total_distanceA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-        #plt.text(0.40, 0.10, f"Ruta A*: {self.routeAA} (Distancia total: {self.total_distanceAA})", ha='center', va='center', fontsize=15, transform=plt.gca().transAxes)
-        mst_text = f"Costo total: {self.mst_total_cost}"
-        plt.text(0.49, 0.05, mst_text, ha='center', va='center', fontsize=7, transform=plt.gca().transAxes)
-
-        # Mostrar el grafo
-        plt.show(block=True)
 
 
     def draw_path(self, route, title="Resultado del Algoritmo"):

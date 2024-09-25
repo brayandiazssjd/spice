@@ -35,15 +35,18 @@ def main_menu():
             goal = int(input("Ingrese el nodo de destino: "))
             route = controller.enruteA(start, goal)
             route_names, total_distance = get_cities(route)
+            mst_edges = get_route_edges(route, city_controller)
             mst = None
             mst_cities = []
             mst_total_cost = 0
+
         
         elif choice == '2':
             start = int(input("Ingrese el nodo de inicio: "))
             goal = int(input("Ingrese el nodo de destino: "))
             route = controller.enruteAA(start, goal)
             route_names, total_distance = get_cities(route)
+            mst_edges = get_route_edges(route, city_controller)
             mst = None
             mst_cities = []
             mst_total_cost = 0
@@ -54,10 +57,7 @@ def main_menu():
             total_distance = 0
             route = ([], 0)
             route_names = get_mst_cities(mst, city_controller)
-            """print("MST Adjacency Matrix:")
-            for i, neighbors in enumerate(mst):
-                for edge in neighbors:
-                    print(f"From {i} to {edge.to} with cost {edge.cost}")"""
+            mst_edges = get_mst_edges(mst, city_controller)
             mst_total_cost = total_cost
         
         elif choice == '4':
@@ -66,6 +66,7 @@ def main_menu():
             total_distance = 0
             route = ([], 0)
             route_names = get_mst_cities(mst, city_controller)
+            mst_edges = get_mst_edges(mst, city_controller)
             mst_total_cost = total_cost
 
         elif choice == '5': #Dijkstra  
@@ -74,6 +75,7 @@ def main_menu():
             total_distance = 0
             route = controller.dijkstra(start, goal)
             route_names, total_distance = get_cities(route)
+            
             mst = None
             mst_cities = []
             mst_total_cost = 0
@@ -84,6 +86,7 @@ def main_menu():
             total_distance = 0
             route = controller.bellman(start, goal)
             route_names, total_distance = get_cities(route)
+            mst_edges = get_route_edges(route, city_controller)
             mst = None
             mst_cities = []
             mst_total_cost = 0
@@ -96,11 +99,8 @@ def main_menu():
             continue
 
         # Mostrar el resultado en la GUI
-        #print("Nombres de nodos en el grafo:", self.g.nodes())
-        #print_original_graph(city_controller.adjmatrix())
-        #compare_graphs(city_controller.adjmatrix(), mst)
         gui = GUI(controller, mst_total_cost)
-        gui.draw_graph(route_names)
+        gui.draw_graph(route_names, mst_edges)
 
 def get_cities(route):
     if not route or not route[0]:
@@ -110,6 +110,21 @@ def get_cities(route):
     ids, total_distance = route  # Desempaquetamos la lista de ids y la distancia total
     city_names = [ct.cities[int(city_id)].name for city_id in ids]  # Obtenemos los nombres de las ciudades
     return city_names, total_distance
+
+def get_route_edges(route, city_controller):
+    # El primer elemento de 'route' es la lista de IDs de ciudades
+    route_ids = route[0]
+    
+    # Lista para almacenar las aristas (edges) de la ruta
+    route_edges = []
+
+    # Iterar sobre los IDs de las ciudades en la ruta para crear las aristas
+    for i in range(len(route_ids) - 1):
+        city1 = city_controller.cities[route_ids[i]].name  # Ciudad origen
+        city2 = city_controller.cities[route_ids[i + 1]].name  # Ciudad destino
+        route_edges.append((city1, city2))  # Añadir la arista origen-destino a la lista
+
+    return route_edges
 
 def get_mst_cities(mst, city_controller):
     mst_cities = set()  # Usamos un conjunto para evitar duplicados
@@ -121,18 +136,16 @@ def get_mst_cities(mst, city_controller):
             mst_cities.add(end_city_name)  # Añadir ciudad destino al conjunto
     return list(mst_cities)  # Convertir el conjunto de vuelta a una lista
 
-"""def compare_graphs(original_adj_matrix, mst_adj_matrix):
-    for u, neighbors in enumerate(mst_adj_matrix):
-        for edge in neighbors:
-            if not any(edge.to == v.to and edge.cost == v.cost for v in original_adj_matrix[u]):
-                print(f"Error: Edge from {u} to {edge.to} with cost {edge.cost} is not in the original graph.")
-
-
-def print_original_graph(adjmatrix):
-    for u, neighbors in enumerate(adjmatrix):
-        for edge in neighbors:
-            print(f"From {u} to {edge.to} with cost {edge.cost}")"""
-
+def get_mst_edges(mst, city_controller):
+    mst_edges = []  # Lista para almacenar las aristas del MST
+    for u, edges in enumerate(mst):  # u representa el nodo origen
+        for edge in edges:
+            # Agregar solo aristas únicas, evitando duplicados
+            if (edge.to, u) not in mst_edges and (u, edge.to) not in mst_edges:
+                start_city_name = city_controller.cities[u].name  # Ciudad origen
+                end_city_name = city_controller.cities[edge.to].name  # Ciudad destino
+                mst_edges.append((start_city_name, end_city_name))  # Añadir la conexión origen-destino
+    return mst_edges
 
 if __name__ == "__main__":
 
