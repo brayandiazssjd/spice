@@ -1,0 +1,48 @@
+@startuml
+
+interface Weightable <T> {
+	weight(id: T): T
+}
+
+interface Sortable <T> {
+	getId(): T
+}
+
+class Router implements Sortable, Weightable {
+	-ip: long
+	-x: int
+	-y: int
+	-VEL: int
+	-table: Routers[0..*]
+
+	getId(): int
+	weight(id: long): int
+	send(route: long[1..*], data: Packet): Packet
+	bsearch(ip: long): Router
+}
+
+class Packet {
+	id: int
+	playload: string
+	destiny: long
+	origin: long
+	ttl: int
+	playloadLength: int
+	protocol: int
+}
+
+class Controller {
+	routers: routers[0..*]
+	man(): void
+}
+
+class Main {
+	main()
+}
+
+Controller o-- Router
+Router ..> Packet
+Main -- Controller
+
+@enduml
+
