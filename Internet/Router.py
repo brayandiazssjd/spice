@@ -2,22 +2,23 @@ import random
 from Packet import Packet
 
 class Router:
-	def __init__(self, id, name, ping) -> None:
-		self.id = id
+
+	def __init__(self, id, name, ping, variance) -> None:
+		self.__id = id
 		self.__ping = ping
 		self.__name = name
-		self.__table = []
+		self.__variance = variance
 
 	# The method to call when sending the data
 	def send(self, destiny_id, packet):
-		# self.transfer(calculate route, packet)
-		pass
+		packet.route = self.__trace_route(destiny_id)
+		self.transfer(packet)
 
 	# the method to actually trasfer the packet and follow the router (hop_list)
-	def transfer(self, hop_list, packet):
-		# next = self.search(hop_list[:1])
-		# if not next:
-		#   error packet
+	def transfer(self, packet):
+		next = self.__search(packet.next())
+		if packet.destiny == self.__id:
+		  print()
 		# if self.__rand_reach(0.90):
 		# 	next.transfer(hop_list[1:], packet)
 		pass
@@ -39,17 +40,14 @@ class Router:
 	def table(self, value):
 		self.__table = value
 
+	# Returns it's ping plus a random variance.
 	@property
 	def ping(self):
-		return self.__ping + self.__delay()
+		return self.__ping + random.randint(-self.__variance, self.__variance)
 
 	@property
 	def name(self):
 		return self.__name
-	
-
-	def __delay(self):
-		return random.random()
 
 	# Return a true with probability of p
 	def __rand_reach(self, p):

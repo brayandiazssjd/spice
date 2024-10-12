@@ -33,6 +33,8 @@ class Packet {
 
 class Controller {
 	routers: routers[0..*]
+	djikstra_or_bellman(matrix): [0..*]
+	adj_matrix(): [0..*] [0..*]
 	man(): void
 }
 
