@@ -3,9 +3,10 @@ from Packet import Packet
 
 class Router:
 	def __init__(self, id, name, ping) -> None:
-		self.__id = id
+		self.id = id
 		self.__ping = ping
 		self.__name = name
+		self.__table = []
 
 	# The method to call when sending the data
 	def send(self, destiny_id, packet):
