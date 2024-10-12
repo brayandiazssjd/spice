@@ -12,29 +12,50 @@ class Controller:
         vel = [100, 98, 96, 94, 92, 90, 88, 86, 84, 82, 80, 78, 76, 74, 72, 102, 204, 306, 408, 150, 250, 350, 450, 820, 840, 860, 880, 900, 920, 940, 960]
         
         self.routers = [Router(ip[i], x[i], y[i], vel[i], []) for i in range(0, 31)]
+
+        #Vecinos 
+
+        r = self.routers
+
+        neighs=[
+            [r[1],r[15], r[17]], #0
+            [r[0], r[17], r[2]], #1
+            [r[1],r[3],r[17]], #2
+            [r[2], r[18], r[17]], #3
+            [r[18]], #4
+            [r[19],r[18]], #5
+            [r[7]], #6
+            [r[8],r[6],r[20]], #7
+            [r[7]], #8
+            [r[22],r[21]], #9
+            [r[21]], #10
+            [r[22],r[21]], #11
+            [r[22]], #12
+            [r[23]], #13
+            [r[15],r[16]], #14
+            [r[0], r[14],r[23],r[16]], #15
+            [r[14],r[15],r[17],r[23]], #16
+            [r[0],r[1],r[2],r[3],r[16],r[22]], #17
+            [r[3], r[4], r[19],r[21],r[23]], #18
+            [r[20], r[5],r[18]], #19
+            [r[21],r[8], r[7],r[19]], #20
+            [r[11],r[10],r[9],r[20],r[18]], #21
+            [r[12],r[11],r[9],r[17]], #22
+            [r[15], r[13],r[16],r[18]], #23
+            [r[31],r[25],r[26],r[30]], #24
+            [r[24],r[26],r[27],r[29]], #25
+            [r[25], r[27],r[24]], #26
+            [r[28],r[26],r[25],r[31]], #27
+            [r[29],r[30],r[27]], #28
+            [r[28],r[25]], #29
+            [r[28],r[31],r[24]], #30
+            [r[30],r[24], r[27]], #31 
+        ]
+
+        for i in range(0, 31):
+            r[i].table = neighs[i]
         
 
-
-        
-class Router(Sortable, Weightable):
-    def __init__(self, ip, x, y, vel, table):
-        self.ip = ip
-        self.x = x
-        self.y = y
-        self.vel = vel
-        self.table = table 
-
-    def getId(self):
-        return self.ip
-
-    def weight(self, id):
-        pass
-
-    def send(self, route, data: Packet):
-        pass
-
-    def bsearch(self, ip):
-        pass
 #Hacer conexiones, digamos hay una lista de rputers, modificar el atributo tabl,e, que es la tabla donde el router tiene 
 #las conexiones, coge el primer router, el atributo table, a table lo conecta con el puntero de la ip del segundo router y así
 
