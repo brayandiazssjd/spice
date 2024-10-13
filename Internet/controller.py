@@ -2,6 +2,7 @@ from Router import Router
 # en terminal: pip install networkx matplotlib
 import networkx as nx
 import matplotlib.pyplot as plt
+from heapq import heapify, heappop, heappush
 
 class Controller:
     def __init__(self):
@@ -19,7 +20,7 @@ class Controller:
             "AT&T", "Verizon", "CenturyLink", "Frontier", "Windstream", "Mediacom", "Suddenlink", "Optimum"
         ]
         #pylint: disable= too-many-function-args
-        self.routers = [Router(id[i], ping[i], names[i]) for i in range(0, 32)]
+        self.routers = [Router(id[i], names[i], ping[i]) for i in range(0, 32)]
 
         #Vecinos 
         r = self.routers
@@ -127,9 +128,80 @@ class Controller:
         nx.draw(G, with_labels=True, node_color=node_colors, node_size=700, font_size=10, font_color='black', edge_color='gray')
         plt.show()
 
+    def shortest_distances(self, source_id):
+        # Inicializa las "distancias" de todos los routers a infinito
+        distances = {router.id: float("inf") for router in self.routers}
+        # Establece la "distancia" del nodo de origen a 0
+        distances[source_id] = 0
+        # Inicializa una cola de prioridad
+        pqueue = [(0, source_id)]
+        heapify(pqueue)
+        # Inicializa el conjunto de nodos visitados
+        visited = set()
+        # Inicializa el diccionario de predecesores
+        predecessors = {router.id: None for router in self.routers}
+        # Itera mientras pqueue no este vacia
+        while pqueue:
+            current_dist, current_node = heappop(pqueue) # Obtiene el nodo con la menor distancia
+            if current_node in visited:
+                continue # Salta si el nodo ya fue visitado
+            visited.add(current_node) # En caso de no haber sido visitado, se añade al conjunto de visitados
+            # Recorre los vecinos del nodo actual
+            for neighbor in self.routers[current_node].table:
+                # Calcula la "distancia", que en este caso es el ping
+                tent_dist = current_dist + neighbor.ping
+                # Si la distancia provisional es menor que la registrada, se actualiza
+                if tent_dist < distances[neighbor.id]:
+                    distances[neighbor.id] = tent_dist
+                    heappush(pqueue, (tent_dist, neighbor.id))
+                    # Actualiza el predecesor
+                    predecessors[neighbor.id] = current_node
+
+        return distances, predecessors
+
+    """def  shortest_path(self, source_id, destiny_id):
+        # Obtiene los predecesores al calcular las distancias más cortas
+        _, predecessors = self.shortest_distances(source_id)
+        # Inicializa el camino resultante
+        path = []
+        current_node = destiny_id
+        # Se va llenando la lista, en reversa, de cada uno de los nodos pertenecientes al camino más corto
+        while current_node:
+            path.append(current_node)
+            current_node = predecessors[current_node]
+        # Se da vuelta a la lista
+        path.reverse()
+
+        return path"""
+    
+    def shortest_path(self, source_id, destiny_id):
+        _, predecessors = self.shortest_distances(source_id)
+        path = []
+        current_node = destiny_id
+        while current_node is not None:
+            path.append(current_node)
+            current_node = predecessors[current_node]
+        path.reverse()
+        return path if path[0] == source_id else []
+
+
+    def test_controller(self):
+        # Nodo de origen y destino
+        source_id = 0
+        destiny_id = 31
+
+        # Calcular distancias más cortas
+        distances, _ = self.shortest_distances(source_id)
+        print(f"Distancias desde el nodo {source_id}: {distances}")
+
+        # Calcular la ruta más corta
+        path = self.shortest_path(source_id, destiny_id)
+        print(f"Camino más corto desde el nodo {source_id} hasta el nodo {destiny_id}: {path}")
+
+
 #Este if era solo para probarlo desde acá, pero ya lo pueden borrar
 if __name__ == "__main__":
     controller = Controller()
     controller.man()
+    controller.test_controller()
     controller.graph()
-        
