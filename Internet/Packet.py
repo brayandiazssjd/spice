@@ -26,7 +26,7 @@ class Packet:
 
 	@property
 	def destiny(self):
-		return self.route[len(self.route)]
+		return self.route[len(self.route)-1]
 
 	@destiny.setter
 	def destiny(self, value):

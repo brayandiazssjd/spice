@@ -10,34 +10,31 @@ class Router:
 		self.__variance = variance
 		self.__buffer = ""
 
+
 	# Simulates http protocol
-	def http(self, destiny_id, packets):
+	def http(self, destiny_id, packets, route):
 		for packet in packets:
-			packet.route = self.__trace_route(destiny_id)
+			packet.route = route
 			self.send(packet)
+			if random.random() > 0.89:
+				print("Paquete perdidido. Reenviando...")
+			print("Paquete: ", packet.id, "Ruta: ", packet.route)
 
 	# the method to actually trasfer the packet and follow the router (hop_list)
 	def send(self, packet: Packet):
-		next_ip = self.__search(packet.next_ip())
+
 		if packet.destiny == self.__id:
 			self.__buffer += packet.playload
 			return
-		self.__search(packet.next_ip()).send(packet)
-
-	def error(self, packet: Packet):
-		route = packet.route
-		route = route[:packet.next_hop - 1]
-		route = route.reverse()
-		# Crea un packet de error y lo envía de vuelta
-
-	# Return a list with the routers ip from the router to the destiny
-	def __trace_route(self, destiny_id):
-		pass
-		#return route
+		next_r = self.__search(packet.next_ip())
+		if not next_r:
+			print("Error")
+		else:
+			next_r.send(packet)
 
 	# Returns the weighted value of the edge between the nodes (current router and destiny)
 	def weight(self, destiny_id):
-		return (self.ping() + self.__search(destiny_id).ping()) / 2
+		return int((self.ping() + self.__search(destiny_id).ping()) / 2)
 
 	@property
 	def table(self):
@@ -68,8 +65,8 @@ class Router:
 
 	# Binary seach in the hop table
 	def __search(self, ip):
-		return next((p for p in self.__table if p.ip == ip), None)
+		return next((p for p in self.__table if p.id == ip), None)
 		
 	def show_message(self):
-		print(self.__buffer)
+		print(self.__name, ":", self.__buffer)
 		self.__buffer = ""

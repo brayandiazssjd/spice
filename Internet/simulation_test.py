@@ -1,4 +1,15 @@
 from Controller import Controller
-p = Controller().package("Hello, my name is Brayan and I am testing this method", 8)
-for q in p:
-	print(q.playload)
+
+
+con = Controller()
+con.man()
+
+print("Redes disponibles:")
+for p in con.routers:
+	print(p.name, "->", p.id)
+	p.controller = con
+origin = 0
+destiny = 31
+msg = "asdfaosdmvaopeasfdafasdfsadfasdfasdfaifkmaoweif"
+
+con.simulate(origin, destiny, msg)

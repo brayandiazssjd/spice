@@ -13,7 +13,7 @@ class Controller:
         self.routers = []  
 
     def simulate(self, origin: int, destiny: int, msg: str):
-        self.routers[origin].http(destiny, self.package(msg, 16))
+        self.routers[origin].http(destiny, self.package(msg, 16), self.shortest_path(origin, destiny))
         d = self.routers[destiny]
         d.show_message()
 
@@ -36,7 +36,18 @@ class Controller:
         # Asignar valores a routers. La enumeración se puede ver en Internet\RedRouters.png
         id = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
         #vel = [100, 98, 96, 94, 92, 90, 88, 86, 83, 84, 82, 80, 78, 76, 74, 72, 102, 204, 306, 408, 150, 250, 350, 450, 820, 840, 860, 880, 900, 920, 940, 960]
-        ping = [80, 82, 84, 86, 88, 90, 92, 83, 94, 96, 98, 100, 102, 104, 106, 108, 40, 42, 44, 46, 48, 50, 52, 54, 20, 25, 15, 30, 18, 22, 28, 26]
+        ping = []
+        variances = []
+        for i in range(8):
+            variances.append(25)
+            ping.append(50)
+        for i in range(8):
+            variances.append(250)
+            ping.append(500)
+        for i in range(16):
+            variances.append(2500)
+            ping.append(5000)
+
         names = [
             "Ana", "Ben", "Cara", "Dan", "Eva", "Finn", "Gina", "Hank", "Santiago",
             "Ivy", "Jack", "Kara", "Leo", "Mia", "Nina", "Oscar", 
@@ -44,7 +55,7 @@ class Controller:
             "AT&T", "Verizon", "CenturyLink", "Frontier", "Windstream", "Mediacom", "Suddenlink", "Optimum"
         ]
         #pylint: disable= too-many-function-args
-        self.routers = [Router(id[i], names[i], ping[i]) for i in range(0, 32)]
+        self.routers = [Router(id[i], names[i], ping[i], variances[i]) for i in range(0, 32)]
 
         #Vecinos 
         r = self.routers
@@ -87,9 +98,9 @@ class Controller:
         for i in range(0, 32): #0 a 31
             r[i].table = neighs[i]
         
-        for router in self.routers:
-            neighbors_ids = [neighbor.id for neighbor in router.table]
-            print(f"Router {router.id} ({router.name}): {neighbors_ids}")
+        #for router in self.routers:
+         #   neighbors_ids = [neighbor.id for neighbor in router.table]
+          #  print(f"Router {router.id} ({router.name}): {neighbors_ids}")
 
     def graph(self):
         # Lista de vecinos

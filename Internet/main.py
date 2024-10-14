@@ -9,17 +9,18 @@ Workflow
 	4.2 Mensajes perdidos
 	4.3 Tiempo que se demoró en llegar todo el mensaje
 '''
-
 from Controller import Controller
+
 con = Controller()
 con.man()
 
 print("Redes disponibles:")
 for p in con.routers:
 	print(p.name, "->", p.id)
-print("Digita el nombre del origen:")
+	p.controller = con
+print("Digita el id del origen:")
 origin = int(input())
-print("Digita el nombre del destino:")
+print("Digita el id del destino:")
 destiny = int(input())
 print("Digita el mensaje:")
 msg = str(input())
