@@ -10,17 +10,18 @@ Workflow
 	4.3 Tiempo que se demoró en llegar todo el mensaje
 '''
 
-import random
+from Controller import Controller
+con = Controller()
+con.man()
 
-# Generate random edges
-edges = []
-for node in ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH"]:
-    num_edges = random.randint(2, 6)
-    connected_nodes = random.sample(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH"], num_edges)
-    for connected_node in connected_nodes:
-        if node != connected_node:
-            edges.append(f"{node} -- {connected_node}")
+print("Redes disponibles:")
+for p in con.routers:
+	print(p.name, "->", p.id)
+print("Digita el nombre del origen:")
+origin = int(input())
+print("Digita el nombre del destino:")
+destiny = int(input())
+print("Digita el mensaje:")
+msg = str(input())
 
-# Add edges to the Graphviz script
-for edge in edges:
-    print(edge)
+con.simulate(origin, destiny, msg)

@@ -1,12 +1,36 @@
+import random
 from Router import Router
 # en terminal: pip install networkx matplotlib
 import networkx as nx
 import matplotlib.pyplot as plt
 from heapq import heapify, heappop, heappush
+import textwrap
+from Packet import Packet
+
 
 class Controller:
     def __init__(self):
         self.routers = []  
+
+    def simulate(self, origin: int, destiny: int, msg: str):
+        self.routers[origin].http(destiny, self.package(msg, 16))
+        d = self.routers[destiny]
+        d.show_message()
+
+    def package(self, text, lenght):
+        packets = []
+        session = random.randint(0, 64)
+        index = 0
+        for data in self.__split_text(text, lenght):
+            packets.append(Packet(session, index, lenght, data))
+            index += 1
+        return packets
+
+    def __split_text(self, text, chunk_size):
+    # Split the text into chunks of the specified size
+        parts = [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+        return parts
+
 
     def man(self):
         # Asignar valores a routers. La enumeración se puede ver en Internet\RedRouters.png
