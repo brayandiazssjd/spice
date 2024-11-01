@@ -17,7 +17,6 @@ con.man()
 print("Redes disponibles:")
 for p in con.routers:
 	print(p.name, "->", p.id)
-	p.controller = con
 print("Digita el id del origen:")
 origin = int(input())
 print("Digita el id del destino:")

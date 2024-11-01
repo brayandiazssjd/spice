@@ -1,0 +1,36 @@
+@startuml
+
+class Controller {
+	matrix: [][]
+	minimize(): int
+	add(): void
+}
+
+class Graph {
+	list: Node
+	get(id: int): Node
+	add(n: Node): void
+}
+
+class Node {
+	id: int
+	color: string
+	neight: [int]
+}
+
+class GUI {
+	draw(list: [Node])
+}
+
+class Main {
+	minimize()
+	add()
+}
+
+Node --* Graph
+Main -- Graph
+Main -- Controller
+Main -- GUI
+
+
+@enduml

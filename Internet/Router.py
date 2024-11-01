@@ -8,11 +8,12 @@ class Router:
 		self.__ping = ping # ping en nanosegundos
 		self.__name = name
 		self.__variance = variance
-		self.__buffer = ""
+		self.__buffer = []
 
 
 	# Simulates http protocol
 	def http(self, destiny_id, packets, route):
+		random.shuffle(packets)
 		for packet in packets:
 			packet.route = route
 			self.send(packet)
@@ -24,7 +25,7 @@ class Router:
 	def send(self, packet: Packet):
 
 		if packet.destiny == self.__id:
-			self.__buffer += packet.playload
+			self.__buffer.append(packet)
 			return
 		next_r = self.__search(packet.next_ip())
 		if not next_r:
@@ -68,5 +69,9 @@ class Router:
 		return next((p for p in self.__table if p.id == ip), None)
 		
 	def show_message(self):
-		print(self.__name, ":", self.__buffer)
-		self.__buffer = ""
+		mss = ""
+		self.__buffer.sort(key = lambda x: x.id)
+		for p in self.__buffer:
+			mss += p.playload
+		print(self.__name, ":", mss)
+		self.__buffer = []

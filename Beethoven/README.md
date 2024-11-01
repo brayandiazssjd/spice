@@ -8,9 +8,14 @@
 - [x] Implementar obeserver para la propagación del sonido
 - [x] Ver como implementar la disminución de ruido por causa de su propagación
 - [ ] Concurrencia?
-- [] Los sonido son como pulsos o para verificar la habilidad solo analizamos el sonido que proviene de los vecinos?
+- [ ] Los sonido son como pulsos o para verificar la habilidad solo analizamos el sonido que proviene de los vecinos?
 
 # TODO
 - [x] Abstracción de la progapación del sonido.
 - [x] Recolección de información para la comparación y desición de habitabilidad.
 - [x] Abstraer la clase sonido, su relación con las otras clases y sus responsabilidades y atributos.
+
+# Tipos de alerta
+1. Verde
+2. Anaranjado
+3. Rojo
