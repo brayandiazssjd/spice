@@ -1,11 +1,10 @@
-from configparser import Error
 
 
 def menu() -> int:
 	print("\t1. Minimizar\n\t2. Agregar\n\t0. Salir\n\t\t-> ")
 	try:
 		return int(input())
-	except Error:
+	except ValueError:
 		return -1
 
 def draw() -> None:
