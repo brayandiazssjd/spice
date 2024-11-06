@@ -1,7 +1,10 @@
 from Graph import Graph
+from Gui import Gui
 
 g = Graph()
 g.upload()
+gui = Gui(g)
+gui.draw_graph()
 
 def adapt(neights):
     return [(n[0].id, n[1]) for n in neights]
