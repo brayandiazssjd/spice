@@ -14,6 +14,14 @@
 - [x] Abstracción de la progapación del sonido.
 - [x] Recolección de información para la comparación y desición de habitabilidad.
 - [x] Abstraer la clase sonido, su relación con las otras clases y sus responsabilidades y atributos.
+- [ ] Revisar automatas.
+- [ ] Revisar algoritmos de coloreado.
+- [ ] Terminar radio (aunque no sea de acá nos sirve como ejemplo de coloreado).
+- [ ] Concretar un grafo de la estructura y una forma de dibujarlo en PY.
+- [ ] Ver algortimos de reducción de automatas y de reducción de grafos.
+- [ ] Diseño de ingeniría a partir de lo anterior.
+- [ ] Una implementación mínima sobre las soluciones sobre las que haya certeza.
+
 
 # Tipos de alerta
 1. Verde

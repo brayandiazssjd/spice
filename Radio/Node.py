@@ -5,13 +5,13 @@ class Node:
 		self.color = ""
 		self.id = id
 		self.name= name
-		self.neights = [] # Almacena las tuplas (neigh pointer, distance)
+		self.neighbors = [] # Almacena las tuplas (neighbour id, distance)
 		
 	# Return the number of neightbours.
 	@property
 	def count(self) -> int:
-		return len(self.neights)
+		return len(self.neighbors)
 
 	# distance is (pointer, measure) 
 	def add(self, distance):
-		self.neights.append(distance)
+		self.neighbors.append(distance)

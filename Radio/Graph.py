@@ -1,66 +1,73 @@
+from typing import Optional
 from Node import Node
 from NodeFactory import NodeFactory
-import numpy as np
+
 
 class Graph:
     def __init__(self):
         self.nodes = []
 
+    # Returns the number of nodes
     @property
-    def count(self):
+    def nodes_number(self):
         return len(self.nodes)
 
     def add(self, n: Node):
         self.nodes.append(n)
 
-    #def minimize(self):
+    def filter(self) -> list:
+        nf = NodeFactory()
+        filtered = nf.clone(self.nodes)
+        for node in filtered:
+            node.neighbors = [(filtered[pointer.id], distance) for pointer, distance in self.nodes[node.id].neighbors if distance <= 150]
+        return filtered
+
+    def get(self, condition) -> Optional[Node]:        
+        for node in self.nodes:
+            if condition(node):
+                return node
+        return None
+            
     def upload(self):
         nf = NodeFactory()
         names = ["FM", "Blue Radio", "Tropicana", "Olimpica", "La W", "La Calle"]
         nodes = nf.create_list(names)
-
-        matrix = np.array([[0, 85, 175, 200, 50, 100],
-                           [0, 0, 125, 175, 100, 160],
-                           [0, 0, 0, 100, 200, 250],
-                           [0, 0, 0, 0, 210, 220],
-                           [0, 0, 0, 0, 0, 100],
-                           [0, 0, 0, 0, 0, 0]])
-        matrix = matrix + matrix.T
-        print(matrix)
-        distances = [[] for i in range(6)]
-        for i in range(len(nodes)):
-            for j in range(len(nodes)):
-                if i != j and matrix[i, j] <= 150:  # Only connect is the distance is >= 150 km
-                    distances[i].append((nodes[j], matrix[i, j]))
-
+        matrix= [[0, 85, 175, 200, 50, 100],
+                [85, 0, 125, 175, 100, 160],
+                [175, 125, 0, 100, 200, 250],
+                [220, 175, 100, 0, 210, 220],
+                [50, 100, 200, 210, 0, 100],
+                [100, 160, 250, 220, 100, 0]]
+        distances = [[(nodes[j], matrix[i][j]) for j in range(len(nodes)) if j != i] for i in range(len(nodes))]
         nf.link(distances, nodes) 
         self.nodes = nodes
-
-    #DSatur algorithm for coloring graph.
+    
+    # DSatur algorithm for coloring graph.
     def dsatur(self):
+        nodes = self.filter()
 
-        colors = {node: -1 for node in self.nodes}
-        saturation = {node: 0 for node in self.nodes}
-        degree = {node: len(node.neights) for node in self.nodes}
+        colors = {node: -1 for node in nodes}
+        saturation = {node: 0 for node in nodes}
+        degree = {node: self.nodes_number for node in nodes}
 
         current_node = max(degree, key=degree.get)
         colors[current_node] = 0
         
-        for neighbor, _ in current_node.neights:
+        for neighbor, _ in current_node.neighbors:
             if colors[neighbor] == -1:
                 saturation[neighbor] += 1
 
         while -1 in colors.values():
-            candidates = [node for node in self.nodes if colors[node] == -1]
+            candidates = [node for node in nodes if colors[node] == -1]
             current_node = max(candidates, key=lambda n: (saturation[n], degree[n]))
 
-            used_colors = {colors[neighbor] for neighbor, _ in current_node.neights if colors[neighbor] != -1}
+            used_colors = {colors[neighbor] for neighbor, _ in current_node.neighbors if colors[neighbor] != -1}
             color = 0
             while color in used_colors:
                 color += 1
             colors[current_node] = color
 
-            for neighbor, _ in current_node.neights:
+            for neighbor, _ in current_node.neighbors:
                 if colors[neighbor] == -1:
                     saturation[neighbor] += 1
 

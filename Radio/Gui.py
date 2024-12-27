@@ -13,7 +13,7 @@ class Gui:
 		for node in self.graph.nodes:
 			G.add_node(node.name)
 
-			for neighbor, distance in node.neights:
+			for neighbor, distance in node.neighbors:
 				if distance <= 150:
 					G.add_edge(node.name, neighbor.name, weight=distance)
         
