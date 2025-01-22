@@ -27,3 +27,8 @@
 1. Verde
 2. Anaranjado
 3. Rojo
+
+# Sugerencias de mejora de confort
+- Cambiar o agregar el material de las paredes.
+- Cambiar de horario la actividad.
+- Cambiar de ubición la actividad.

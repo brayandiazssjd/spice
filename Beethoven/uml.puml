@@ -1,0 +1,14 @@
+@startuml
+
+
+class RoomController {
+    - rooms: Room[0..*]
+    - spread(id: int): void
+}
+
+class RoomFactory {
+    - list(data: Tuple[0..*][0..*])
+}
+
+
+@enduml
