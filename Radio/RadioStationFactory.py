@@ -1,14 +1,13 @@
-from Node import Node
+from RadioStation import RadioStation
 
 
-class NodeFactory:
-    """docstring for NodeFactory"""
+class RadioStationFactory:
 
     def create_list(self, names):
-        return [Node(i, names[i]) for i in range (len(names))]
+        return [RadioStation(i, names[i]) for i in range (len(names))]
 
-    def create_all_attrs(self, color: str, neighbors, id: int, name: str) -> Node:
-        node = Node(id, name)
+    def create_all_attrs(self, color: str, neighbors, id: int, name: str) -> RadioStation:
+        node = RadioStation(id, name)
         node.neighbors = neighbors
         node.color = color
         return node

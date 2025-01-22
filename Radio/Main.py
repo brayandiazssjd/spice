@@ -1,4 +1,4 @@
-from Node import Node
+from RadioStation import RadioStation
 from Graph import Graph
 from Gui import Gui
 
@@ -18,10 +18,10 @@ def get_d(neigh_name) -> int:
 
 def add(g: Graph):
     print("Ingrese el nombre: ")
-    node = Node(g.nodes_number, input())
-    for n in g.nodes:
+    node = RadioStation(g.nodes_number, input())
+    for n in g.radio_stations:
         d = get_d(n.name)
-        node.neighbors.append((n, d))
+        node.neighbors.add((n, d))
         n.neighbors.append((node, d))
     g.add(node)
 

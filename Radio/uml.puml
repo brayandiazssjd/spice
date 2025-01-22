@@ -1,35 +1,46 @@
 @startuml
 
+skinparam defaultFontName "Poppins"
+
 class Controller {
-	matrix: [][]
-	minimize(): int
-	add(): void
+    matrix: [][]
+    minimize(): int
+    add(): void
+}
+
+class RSFactory {
+    create(): RadioStation
+    clone(rss: RadioStation[0..*]): RadioStation[0..*]
 }
 
 class Graph {
-	list: Node
-	get(id: int): Node
-	add(n: Node): void
+    radioStations: RadioStation[0..*]
+    get(f: (RadioStation) -> bool): RadioStation
+    add(n: RadioStation): void
+    upload(): void
+    dsatur(): void
+    filtler(): RadioStation[0..*]
 }
 
-class Node {
-	id: int
-	color: string
-	neight: [int]
+class RadioStation {
+    id: int
+    name: str
+    color: str
+    neighbors: int[0..*]
 }
 
 class GUI {
-	draw(list: [Node])
+    draw(rss: RadioStation[0..*])
 }
 
 class Main {
-	minimize()
-	add()
+    minimize()
+    add()
 }
 
-Node --* Graph
+RadioStation --o Graph
+RSFactory -- Graph
 Main -- Graph
-Main -- Controller
 Main -- GUI
 
 
