@@ -1,6 +1,10 @@
 from Room import Room
+import Controller
 
-class RoomController:
+class RoomController(Controller["Room"]):
 
     def __init__(self):
-        self.rooms = []
+        super().__init__()
+
+    def create(self):
+        pass
