@@ -4,5 +4,5 @@ class Sound:
         self.frecuency = frecuency
         self.pressure = pressure
 
-    def getNoiseRaiting(self) -> float:
-        pass
+    def getNoise(self) -> float:
+        return self.frecuency*self.pressure

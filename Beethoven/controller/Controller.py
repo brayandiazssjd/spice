@@ -1,11 +1,20 @@
-from typing import TypeVar, Generic, List, Optional, Any
+from abc import ABC, abstractmethod
+from typing import Callable, Optional
 
-T = TypeVar("T")
-
-class Controller(Generic[T]):
+class Controller[T](ABC):
     
     def __init__(self):
-        self.objects: List[T] = []
+        self.objects: list[T] = []
 
-    def create(self):
+    def get(self, f: Callable[[T], bool]) -> Optional[T]:
+        for obj in self.objects:
+            if f(obj):
+                return obj
+        return None
+
+    def add(self, T):
+        self.objects.append(T)
+
+    @abstractmethod
+    def upload(self) -> None:
         pass

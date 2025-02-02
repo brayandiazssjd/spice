@@ -3,5 +3,6 @@ from Material import Material
 
 class Wall:
 
-    def __init__(self, materials: List[Material]):
+    def __init__(self, id: int, materials: List[Material]):
+        self.id = id
         self.materials = materials

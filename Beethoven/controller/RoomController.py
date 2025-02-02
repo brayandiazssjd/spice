@@ -1,10 +1,13 @@
-from Room import Room
-import Controller
+from model.Room import Room
+from Controller import Controller
 
-class RoomController(Controller["Room"]):
+
+class RoomController(Controller[Room]):
 
     def __init__(self):
         super().__init__()
 
-    def create(self):
+    def diagnose(self):
         pass
+
+
