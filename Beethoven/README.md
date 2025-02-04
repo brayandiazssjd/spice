@@ -32,3 +32,10 @@
 - Cambiar o agregar el material de las paredes.
 - Cambiar de horario la actividad.
 - Cambiar de ubición la actividad.
+
+# Funcionalidades
+- [ ] Ver el diagnostico por nodo
+- [ ] CRUD nodo
+- [ ] CRUD actividad
+- [ ] Propuesta de grafo
+- [ ] 

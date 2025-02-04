@@ -1,10 +1,13 @@
-from abc import ABC, abstractmethod
-from typing import Callable, Optional
+from typing import Callable, Dict, List, Optional
+import json
 
-class Controller[T](ABC):
+from Beethoven.controller.Factory import Factory
+
+
+class Controller[T]:
     
     def __init__(self):
-        self.objects: list[T] = []
+        self.objects: List[T] = []
 
     def get(self, f: Callable[[T], bool]) -> Optional[T]:
         for obj in self.objects:
@@ -15,6 +18,8 @@ class Controller[T](ABC):
     def add(self, T):
         self.objects.append(T)
 
-    @abstractmethod
-    def upload(self) -> None:
-        pass
+
+    def upload(self, source: str, factory: Factory) -> None:
+        with open(source, "r") as file:
+            data_list = json.load(file)
+        self.objects = [factory.create(data) for data in data_list]

@@ -1,11 +1,10 @@
 from Activity import Activity
 from Wall import Wall
 from Room import Room
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 class Room:
-    def __init__(self, id: int, habitable: bool, relations: List[Tuple[Room, Wall]], activities: List[Activity]):
+    def __init__(self, id: int, relations = None , activities = None):
         self.id = id
-        self.habitable = habitable
-        self.relations = relations
-        self.activities = activities
+        self.relations: Optional[List[Tuple[Room, Wall]]] = relations
+        self.activities: Optional[List[Activity]] = activities

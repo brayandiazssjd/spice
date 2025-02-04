@@ -1,8 +1,8 @@
-from typing import List
+from typing import List, Optional
 from Material import Material
 
 class Wall:
 
-    def __init__(self, id: int, materials: List[Material]):
+    def __init__(self, id: int, materials = None):
         self.id = id
-        self.materials = materials
+        self.materials: Optional[List[Material]] = materials

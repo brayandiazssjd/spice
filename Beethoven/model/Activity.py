@@ -1,15 +1,18 @@
-from Sound import Sound
-from Time import Time
+
+
+from typing import Optional
 
 
 class Activity:
 
-    def __init__(self, name: str, sound: Sound, start: Time, end:Time, max_noise: int):
-        self.name = name
-        self.sound = sound
-        self.start = start
-        self.end = end
-        self.max_noise = max_noise
+    def __init__(self, id = None, local_noise = None, name = None, start = None, end = None, external_noise = None):
+        self.id: Optional[int] = id
+        self.name: Optional[str] = name
+        self.start: Optional[int] = start
+        self.end: Optional[int] = end
+        self.external_noise: Optional[int] = external_noise
+        self.local_noise: Optional[int] = local_noise
 
+    
     def __str__(self) -> str:
-        return f"(name={self.name}, sound={self.sound}, start={self.start}, end={self.end}, max_noise={self.max_noise})"
+        return f"(name={self.id: int, me}, local_noise={self.local_noise}, start={self.start}, end={self.end}, max_noise={self.external_noise})"
