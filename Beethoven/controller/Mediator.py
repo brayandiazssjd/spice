@@ -24,3 +24,9 @@ class Mediator:
         self.wall_controller.upload("Beethoven/data/walls.json", WallFactory())
         self.material_controller.upload("Beethoven/data/material.json", MaterialFactory())
 
+    def __init__(self, roomController: RoomController):
+        self.roomController = roomController
+        self.window = Window(self)
+
+    def notify(changes: list):
+        pass
