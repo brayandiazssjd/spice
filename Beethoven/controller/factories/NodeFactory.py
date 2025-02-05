@@ -1,4 +1,4 @@
-from Beethoven.controller.Factory import Factory
+from .Factory import Factory
 
 
 class NodeFactory(Factory):

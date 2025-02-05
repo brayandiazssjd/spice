@@ -1,5 +1,5 @@
 from typing import Dict
-from Factory import Factory
+from .Factory import Factory
 from model.Room import Room
 
 

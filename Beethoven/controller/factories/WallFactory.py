@@ -1,4 +1,4 @@
-from Beethoven.controller.factories.Factory import Factory
+from.Factory import Factory
 from model.Wall import Wall
 from typing import Dict
 

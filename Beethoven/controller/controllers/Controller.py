@@ -1,6 +1,6 @@
 from typing import Callable, Dict, List, Optional
 import json
-from factories.Factory import Factory
+from ..factories.Factory import Factory
 
 
 class Controller[T]:

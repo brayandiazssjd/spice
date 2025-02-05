@@ -1,8 +1,9 @@
 import json
-from Beethoven.controller.factories.RoomFactory import RoomFactory
-from Beethoven.model.Room import Room
-from Beethoven.model.Wall import Wall
-from Controller import Controller
+from ..factories.RoomFactory import RoomFactory
+from model.Room import Room
+from model.Wall import Wall
+from .Controller import Controller
+from typing import List
 
 
 class RoomController:

@@ -1,19 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
+from typing import Optional
+from controller import Mediator
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import networkx as nx
-from controller import Mediator
 
 
 class Window:
 
-    def __init__(self, mediator: Mediator):
+    def __init__(self, mediator = None):
         self.mediator = mediator
 
     # Función para crear el grafo 3D
-    def crear_grafo_3d():
+    def crear_grafo_3d(self):
 
         # Lista de actividades
         actividades = [

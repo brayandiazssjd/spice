@@ -1,6 +1,6 @@
 from typing import Dict
-from Beethoven.controller.Factory import Factory
-from Beethoven.model.Material import Material
+from .Factory import Factory
+from model.Material import Material
 
 
 class MaterialFactory(Factory[Material]):

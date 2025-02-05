@@ -1,6 +1,5 @@
-from Activity import Activity
-from Wall import Wall
-from Room import Room
+from .Activity import Activity
+from .Wall import Wall
 from typing import List, Optional, Tuple
 
 class Room:

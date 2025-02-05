@@ -1,5 +1,5 @@
-from typing import List, Optional
-from Material import Material
+#from typing import List, Optional
+#from Material import Material
 
 class Wall:
 

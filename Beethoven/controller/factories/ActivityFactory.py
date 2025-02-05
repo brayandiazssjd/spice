@@ -1,5 +1,5 @@
-from Beethoven.controller.Factory import Factory
-from Beethoven.model.Activity import Activity
+from.Factory import Factory
+from model.Activity import Activity
 from typing import Dict
 
 

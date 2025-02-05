@@ -1,4 +1,4 @@
-from Beethoven.controller.controllers.Controller import Controller
+from controller.controllers.Controller import Controller
 from model.Wall import Wall
 
 

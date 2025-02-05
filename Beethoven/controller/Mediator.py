@@ -1,12 +1,12 @@
-from Beethoven.controller.controllers.ActivityController import ActivityController
-from Beethoven.controller.controllers.MaterialController import MaterialController
-from Beethoven.controller.controllers.WallController import WallController
-from Beethoven.controller.controllers.RoomController import RoomController
-from Beethoven.controller.factories.MaterialFactory import MaterialFactory
-from Beethoven.controller.factories.WallFactory import WallFactory
-from Beethoven.controller.factories.ActivityFactory import ActivityFactory
-from Beethoven.controller.factories.RoomFactory import RoomFactory
-from Window import Window
+from controller.controllers.ActivityController import ActivityController
+from controller.controllers.MaterialController import MaterialController
+from controller.controllers.WallController import WallController
+from controller.controllers.RoomController import RoomController
+from controller.factories.MaterialFactory import MaterialFactory
+from controller.factories.WallFactory import WallFactory
+from controller.factories.ActivityFactory import ActivityFactory
+from controller.factories.RoomFactory import RoomFactory
+from view.Window import Window
 
 
 class Mediator:

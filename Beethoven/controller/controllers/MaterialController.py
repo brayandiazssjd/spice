@@ -1,5 +1,5 @@
-from Beethoven.controller.controllers.Controller import Controller
-from Beethoven.model.Material import Material
+from controller.controllers.Controller import Controller
+from model.Material import Material
 
 
 class MaterialController(Controller[Material]):
