@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "isolation_rate": 40
+  },
+  {
+    "id": 1,
+    "isolation_rate": 30
+  },
+  {
+    "id": 2,
+    "isolation_rate": 20
+  },
+  {
+    "id": 3,
+    "isolation_rate": 10
+  }
+]

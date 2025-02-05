@@ -1,7 +1,26 @@
-from RoomController import RoomController
-from view import Window
+from Beethoven.controller.controllers.ActivityController import ActivityController
+from Beethoven.controller.controllers.MaterialController import MaterialController
+from Beethoven.controller.controllers.WallController import WallController
+from Beethoven.controller.controllers.RoomController import RoomController
+from Beethoven.controller.factories.MaterialFactory import MaterialFactory
+from Beethoven.controller.factories.WallFactory import WallFactory
+from Beethoven.controller.factories.ActivityFactory import ActivityFactory
+from Beethoven.controller.factories.RoomFactory import RoomFactory
+from Window import Window
+
 
 class Mediator:
 
     def __init__(self):
-       
+        self.room_controller: RoomController = RoomController()
+        self.wall_controller: WallController = WallController()
+        self.material_controller: MaterialController = MaterialController()
+        self.activity_controller: ActivityController = ActivityController()
+        self.window = Window()
+        
+        
+        self.room_controller.upload("Beethoven/data/rooms.json", RoomFactory())
+        self.activity_controller.upload("Beethoven/data/activities", ActivityFactory())
+        self.wall_controller.upload("Beethoven/data/walls.json", WallFactory())
+        self.material_controller.upload("Beethoven/data/material.json", MaterialFactory())
+
