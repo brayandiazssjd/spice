@@ -8,3 +8,6 @@ class Room:
         self.id = id
         self.relations: Optional[List[Tuple[Room, Wall]]] = relations
         self.activities: Optional[List[Activity]] = activities
+
+    def getNoise(self):
+        pass

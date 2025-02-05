@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import networkx as nx
 from controller import Mediator
 
+
 class Window:
 
     def __init__(self, mediator: Mediator):
@@ -13,6 +14,23 @@ class Window:
 
     # Función para crear el grafo 3D
     def crear_grafo_3d():
+
+        # Lista de actividades
+        actividades = [
+            {"id": 0, "name": "Educación física", "external_noise": 40, "local_noise": 50, "start": 8, "end": 10},
+            {"id": 1, "name": "Baile", "external_noise": 50, "local_noise": 60, "start": 8, "end": 10},
+            {"id": 2, "name": "Yoga", "external_noise": 30, "local_noise": 20, "start": 8, "end": 10},
+            {"id": 3, "name": "Cátedra", "external_noise": 20, "local_noise": 30, "start": 8, "end": 10},
+            {"id": 4, "name": "Conferencia", "external_noise": 25, "local_noise": 35, "start": 8, "end": 10},
+            {"id": 5, "name": "Debate", "external_noise": 35, "local_noise": 55, "start": 8, "end": 10},
+            {"id": 6, "name": "Laboratorio", "external_noise": 15, "local_noise": 25, "start": 8, "end": 10},
+            {"id": 7, "name": "Investigación", "external_noise": 20, "local_noise": 20, "start": 8, "end": 10},
+            {"id": 8, "name": "Teatro", "external_noise": 35, "local_noise": 45, "start": 8, "end": 10}
+        ]
+
+        # Crear un diccionario para acceder a las actividades por nombre
+        actividades_dict = {actividad["name"]: actividad["id"] for actividad in actividades}
+
         global pos, G  # Guardamos las posiciones y el grafo para su uso posterior
 
         G = nx.Graph()
@@ -66,6 +84,12 @@ class Window:
         seleccionado = combobox_nodos.get()
         label_seleccion.config(text=f"Seleccionado: {seleccionado}")
 
+    # Función cuando se seleccione una actividad
+    def actividad_seleccionada(event):
+        nombre_actividad = combobox_actividades.get()  # Obtiene el nombre seleccionado
+        actividad_id = actividades_dict[nombre_actividad]  # Obtiene el ID desde el diccionario
+        label_actividad.config(text=f"Actividad: {nombre_actividad} (ID: {actividad_id})")  # Muestra ID y nombre
+
     # Crear ventana principal
     root = tk.Tk()
     root.title("Grafo 3D con menú y selección de nodos")
@@ -102,11 +126,24 @@ class Window:
     label_seleccion = tk.Label(tab1, text="Seleccionado: Ninguno", font=("Arial", 10))
     label_seleccion.pack(pady=5)
 
+    # Combobox para seleccionar una actividad
+    combobox_actividades = ttk.Combobox(tab1, values=list(actividades_dict.keys()), state="readonly")
+    combobox_actividades.pack(pady=5)
+    combobox_actividades.bind("<<ComboboxSelected>>", actividad_seleccionada)
+
+    # Etiqueta para mostrar la actividad seleccionada
+    label_actividad = tk.Label(tab1, text="Actividad: Ninguna", font=("Arial", 10))
+    label_actividad.pack(pady=5)
+
     #Funciones de los botones
     def editar():
         pass
     def cambiarAct():
-        pass
+        nombre_actividad = combobox_actividades.get()  # Obtiene el nombre de la actividad
+        if nombre_actividad:  # Verifica que haya una selección
+            nodo_id = combobox_nodos.get() # Obtiene el ID desde el diccionario
+            act_select = next((act for act in actividades if act["name"] == nombre_actividad), None)
+        self.mediator.cambiarAct(act_select, nodo_id)
 
     def diagnosticar():
         pass
