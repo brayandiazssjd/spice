@@ -1,11 +1,12 @@
 from typing import Optional, Tuple, List
+from model.Room import Room
 
 
 class Node:
 
-    def __init__(self, id: int, room, color = None):
+    def __init__(self, id: int, room: Optional[Room], color = None):
         self.id = id
-        self.room: Optional[int] = room
+        self.room = room
         self.color: Optional[int] = color
         self.edges: Optional[List[Tuple[int, float]]] = []  # Lista de conexiones con otros nodos
 
