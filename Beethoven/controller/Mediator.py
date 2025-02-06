@@ -6,7 +6,7 @@ from controller.factories.MaterialFactory import MaterialFactory
 from controller.factories.WallFactory import WallFactory
 from controller.factories.ActivityFactory import ActivityFactory
 from controller.factories.RoomFactory import RoomFactory
-
+from model.Graph import Graph
 
 class Mediator:
 
@@ -17,10 +17,10 @@ class Mediator:
         self.activity_controller: ActivityController = ActivityController()
         
         
-        self.room_controller.upload("Beethoven/data/rooms.json", RoomFactory())
-        self.activity_controller.upload("Beethoven/data/activities.json", ActivityFactory())
-        self.wall_controller.upload("Beethoven/data/walls.json", WallFactory())
-        self.material_controller.upload("Beethoven/data/material.json", MaterialFactory())   
+        #self.room_controller.upload("Beethoven/data/rooms.json", RoomFactory())
+        #self.activity_controller.upload("Beethoven/data/activities.json", ActivityFactory())
+        #self.wall_controller.upload("Beethoven/data/walls.json", WallFactory())
+        #self.material_controller.upload("Beethoven/data/material.json", MaterialFactory())   
 
     def cambiarAct(self, act, idRoom):
         # Buscar la habitación por su ID
@@ -42,3 +42,16 @@ class Mediator:
         room = next((room for room in self.room_controller.rooms if room.id == id), None)
         act = room.activities
         return act
+
+    def get_graph(self) -> Graph:
+        #return self.room_controller.get_graph()
+        matrix = [[(1,4), (3,2)],
+                  [],
+                  [],
+                  []]
+        nodes = [Node(i, i) for i in range(10)]
+        for node in nodes:
+            node.color = random.int(3)
+            node.edges = matrix[node.id]
+        return Graph(nodes)
+
