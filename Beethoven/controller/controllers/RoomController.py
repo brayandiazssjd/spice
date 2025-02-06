@@ -6,7 +6,7 @@ from ..factories.RoomFactory import RoomFactory
 from model.Room import Room
 from model.Wall import Wall
 from .Controller import Controller
-from typing import List
+from typing import List, Tuple
 from model.Node import Node
 
 
@@ -92,32 +92,28 @@ class RoomController:
     def getHabitability(self):
         pass
 
-    def get_graph(self) -> Graph:
+    def get_graph(self) -> Tuple[Graph, dict]:
         nodes: List[Node] = []
+        node_dict = {}
+
         for room in self.rooms:
-            nodes.append(Node(room.id, room)) # Guarda el objeto Room en el Nodo
+            node = Node(room.id, room)
+            nodes.append(node)
+            node_dict[room.id] = node
 
         for node in nodes:
-            for nbr_room, wall in node.room.relations: # Accede a room.relations
-                node.add_edge(nbr_room.id, wall.isolation_rating) # Usa la relacion para crear la arista
-            node.color = 1
+            for nbr_room, wall in node.room.relations:
+                node.add_edge(nbr_room.id, wall.isolation_rating)
 
+        for node in nodes:
+            node.edges = [(nbr.id, nbr.activities[0].local_noise - wall.isolation_rating) for nbr, wall in node.room.relations]
+
+            node.color = 0
             for nbr, weight in node.edges:
                 external_noise = self.rooms[nbr].activities[0].external_noise
                 if (external_noise + 5) > external_noise and external_noise > weight:
-                    node.color = 2
-                elif weight > external_noise:
-                    node.color = 3
-
-        return Graph(nodes)
-
-
-        '''node.edges = [(nbr.id, nbr.activity.local_noise - wall.isolation_rating) for nbr, wall in self.rooms[node.room].relations]
-            node.color = 1
-            for nbr, weight in node.edges:
-                external_noise = self.rooms[nbr].activities[0].external_noise
-                if (external_noise + 5) > external_noise and external_noise > weight:
-                    node.color = 2
+                    node.color = 1
                 elif external_noise < weight:
-                    node.color = 3
-        return Graph(nodes) '''
+                    node.color = 2
+
+        return Graph(nodes), node_dict

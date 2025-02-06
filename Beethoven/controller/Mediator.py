@@ -36,7 +36,7 @@ class Mediator:
             
         # Elimina la actividad anterior (si hay alguna)
         if room.activities:
-            room.activities.pop()  # Elimina el último elemento de la lista (puedes ajustar esto si necesitas eliminar una actividad específica)
+            room.activities.pop()
 
             # Añade la nueva actividad
             room.activities.append(act)
@@ -50,14 +50,23 @@ class Mediator:
         act = room.activities
         return [str(a) for a in act]
     
+    def diagnosticar(self, id, color) -> str:
+        id = int(id)
+        colores = ["Verde", "Amarillo", "Rojo"]
+        if (color==0):
+            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n El salón es habitable."
+        elif (color==1):
+            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe cambiar de ubicación el salón a una zona con menos ruido externo."
+        elif (color==2):
+            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe reforzar las paredes con un material que aisle mucho más el ruido."
+
     def get_graph_data(self):
-        graph = self.room_controller.get_graph()
+        graph, node_dict = self.room_controller.get_graph()
         nodes_data = {}
         edges_data = {}
 
         for node_id, node in graph.nodes.items():
-            nodes_data[node_id] = node.room # Guarda el objeto Room en el diccionario
+            nodes_data[node_id] = node_dict[node_id].room  # Acceso correcto al Room
             edges_data[node_id] = [(neighbor, weight) for neighbor, weight in node.edges]
 
-        return {'nodes': nodes_data, 'edges': edges_data}
-
+        return {'nodes': nodes_data, 'edges': edges_data}, node_dict  # Devuelve un *TUPLA*
