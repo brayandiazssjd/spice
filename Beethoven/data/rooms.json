@@ -2,9 +2,9 @@
   {
     "id": 0,
     "relations": [
-      {2, 2},
-      {3, 0}
-    ]
-    ,"activities": [2]
+      {"room": 2, "wall": 2},
+      {"room": 3, "wall": 0}
+    ],
+    "activities": [2]
   }
 ]
