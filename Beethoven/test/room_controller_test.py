@@ -1,8 +1,8 @@
-import controller.controllers.RoomController
-import controller.controllers.WallController
+from controller.controllers.RoomController import RoomController
 
+rc: RoomController = RoomController()
+rc.create_test_rooms()
+g = rc.get_graph()
 
-wc = WallController()
-rc = RoomController()
-
+print([str(g.nodes[i]) for i in range(3)])
 

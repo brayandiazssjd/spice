@@ -75,7 +75,7 @@ class RoomController:
         for i, room in enumerate(self.rooms):
             activity_index = i % len(self.activities)  # Distribuye las actividades cíclicamente
             activity_data = self.activities[activity_index]
-            activity = Activity(activity_data["id"], activity_data["name"], activity_data["external_noise"], activity_data["local_noise"], activity_data["start"], activity_data["end"])
+            activity = Activity(activity_data["id"], name = activity_data["name"], external_noise=activity_data["external_noise"], local_noise= activity_data["local_noise"], start=activity_data["start"], end=activity_data["end"])
             room.activities = [activity]  # Asigna la actividad a la room (en una lista)
     
     # FIN DEL TESTEO P MANO
@@ -100,7 +100,18 @@ class RoomController:
         for node in nodes:
             for nbr_room, wall in node.room.relations: # Accede a room.relations
                 node.add_edge(nbr_room.id, wall.isolation_rating) # Usa la relacion para crear la arista
+            node.color = 1
+
+            for nbr, weight in node.edges:
+                external_noise = self.rooms[nbr].activities[0].external_noise
+                if (external_noise + 5) > external_noise and external_noise > weight:
+                    node.color = 2
+                elif weight > external_noise:
+                    node.color = 3
+
         return Graph(nodes)
+
+
         '''node.edges = [(nbr.id, nbr.activity.local_noise - wall.isolation_rating) for nbr, wall in self.rooms[node.room].relations]
             node.color = 1
             for nbr, weight in node.edges:
