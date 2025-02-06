@@ -34,8 +34,13 @@ class Mediator:
             if room.activities is None:
                 room.activities = []  # Inicializa la lista si está vacía
             
-            room.activities.append(act)  # Añade la nueva actividad
-            print(f"Actividad '{act}' añadida a la habitación con ID {idRoom}.")
+        # Elimina la actividad anterior (si hay alguna)
+        if room.activities:
+            room.activities.pop()  # Elimina el último elemento de la lista (puedes ajustar esto si necesitas eliminar una actividad específica)
+
+            # Añade la nueva actividad
+            room.activities.append(act)
+            print(f"Actividad '{act}' reemplazada en la habitación con ID {idRoom}.")
         else:
             print(f"Habitación con ID {idRoom} no encontrada.")
 
@@ -44,28 +49,7 @@ class Mediator:
         room = next((room for room in self.room_controller.rooms if room.id == id), None)
         act = room.activities
         return act
-
-    def get_graph(self) -> Graph:
-        matrix = [
-            [(1, 4), (2, 2)],  # Nodo 0
-            [(3, 3), (4, 2)],  # Nodo 1
-            [(5, 3), (6, 4)],  # Nodo 2
-            [(7, 4), (8, 3)],  # Nodo 3
-            [(9, 5), (10, 2)]  # Nodo 4
-        ]
-
-        nodes = [Node(i, i) for i in range(11)]
-        
-        import random
-        for node in nodes:
-            node.color = random.randint(0, 3) 
-            if node.id < len(matrix):  # Evitar índices fuera de rango
-                for neighbor, weight in matrix[node.id]:  
-                    node.add_edge(neighbor, weight)
-
-        return Graph(nodes)
-
-
+    
     def get_graph_data(self):
         graph = self.room_controller.get_graph()
         nodes_data = {}

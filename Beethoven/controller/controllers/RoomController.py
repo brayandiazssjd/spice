@@ -69,6 +69,8 @@ class RoomController:
         room7.relations = [(room3, wall_3_7), (room6, wall_6_7), (room8, wall_7_8)]
         room8.relations = [(room3, wall_3_8), (room7, wall_7_8), (room9, wall_8_9)]
         room9.relations = [(room4, wall_4_9), (room8, wall_8_9)]
+            
+        self.rooms = [room0, room1, room2, room3, room4, room5, room6, room7, room8, room9]
 
         # Asigna actividades a las rooms (una actividad por room)
         for i, room in enumerate(self.rooms):
@@ -76,8 +78,7 @@ class RoomController:
             activity_data = self.activities[activity_index]
             activity = Activity(activity_data["id"], activity_data["name"], activity_data["external_noise"], activity_data["local_noise"], activity_data["start"], activity_data["end"])
             room.activities = [activity]  # Asigna la actividad a la room (en una lista)
-            
-        self.rooms = [room0, room1, room2, room3, room4, room5, room6, room7, room8, room9]
+    
     # FIN DEL TESTEO P MANO
 
     def upload(self, source: str, walls: List[Wall]):
