@@ -13,6 +13,7 @@ class Window:
         self.root = tk.Tk()
         self.root.title("Grafo 3D con menú y selección de nodos")
         self.root.geometry("900x600")
+        self.figura_grafo, self.G, self.pos = self.crear_grafo_3d_desde_rooms()
 
         # Frame para el menú
         menu_frame = tk.Frame(self.root, width=250, bg="lightgray")
@@ -29,9 +30,6 @@ class Window:
         # Label
         self.menu_label = tk.Label(self.tab1, text="Seleccione un Nodo:", font=("Arial", 12))
         self.menu_label.pack(pady=5)
-
-        # Crear y mostrar el grafo 3D
-        self.figura_grafo, self.G, self.pos = self.crear_grafo_3d()
 
         # Usar los nodos generados en el grafo
         self.nodos_lista = list(self.G.nodes())  # Obtener los nodos del grafo automáticamente
@@ -72,7 +70,7 @@ class Window:
         ttk.Button(self.tab1, text="Info", command=self.info).pack(pady=5)
         ttk.Button(self.tab1, text="Cambiar actividad", command=self.cambiarAct).pack(pady=5)
         ttk.Button(self.tab1, text="Diagnosticar", command=self.diagnosticar).pack(pady=5)
-
+        
         # Frame para el grafo 3D
         self.graph_frame = tk.Frame(self.root)
         self.graph_frame.pack(side="right", fill="both", expand=True)
@@ -84,6 +82,44 @@ class Window:
         # Ejecutar la aplicación
         self.root.mainloop()
 
+    def crear_grafo_3d_desde_rooms(self):
+        # Obtener el grafo desde el RoomController
+        graph_data = self.mediator.get_graph_data()  # Nuevo método en Mediator
+
+        G = nx.Graph()
+        pos = {}
+
+        # Añadir nodos y posiciones desde los datos del grafo
+        for node_id, room in graph_data['nodes'].items():
+            G.add_node(node_id)
+            # Asignar posiciones 3D (esto es un ejemplo, ajusta según tu necesidad)
+            # Podrías usar información de la habitación si la tienes, sino usa un diseño fijo
+            piso = node_id // 4  # Ejemplo: 4 habitaciones por piso
+            habitacion = node_id % 4
+            x = habitacion // 2 # 0 o 1
+            y = habitacion % 2  # 0 o 1
+            z = piso
+            pos[node_id] = (x, y, z)  # Posiciones fijas por ahora
+
+        # Añadir aristas desde los datos del grafo
+        for node_id, edges in graph_data['edges'].items():
+            for neighbor_id, weight in edges:
+                G.add_edge(node_id, neighbor_id)
+
+        # Dibujar el grafo (igual que antes, pero usando G y pos)
+        fig = plt.figure(figsize=(6, 6))
+        ax = fig.add_subplot(111, projection='3d')
+
+        for node, (x, y, z) in pos.items():
+            ax.scatter(x, y, z, c='blue', s=100)
+            ax.text(x, y, z, str(node), color='black', fontsize=14, fontweight='bold')
+        for edge in G.edges():
+            x, y, z = zip(*[pos[n] for n in edge])
+            ax.plot(x, y, z, c='black')
+
+        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])
+        return fig, G, pos
+    """
     def crear_grafo_3d(self):
         G = nx.Graph()
         pisos, habitaciones_por_piso = 5, 4
@@ -117,7 +153,7 @@ class Window:
             ax.plot(x, y, z, c='black')
 
         ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])
-        return fig, G, pos
+        return fig, G, pos"""
 
     def nodo_seleccionado(self, event):
         seleccionado = self.combobox_nodos.get()

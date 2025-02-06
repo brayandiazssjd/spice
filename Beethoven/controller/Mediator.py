@@ -1,3 +1,5 @@
+import random
+from model.Node import Node
 from controller.controllers.ActivityController import ActivityController
 from controller.controllers.MaterialController import MaterialController
 from controller.controllers.WallController import WallController
@@ -44,14 +46,33 @@ class Mediator:
         return act
 
     def get_graph(self) -> Graph:
-        #return self.room_controller.get_graph()
-        matrix = [[(1,4), (3,2)],
-                  [],
-                  [],
-                  []]
-        nodes = [Node(i, i) for i in range(10)]
+        matrix = [
+            [(1, 4), (2, 2)],  # Nodo 0
+            [(3, 3), (4, 2)],  # Nodo 1
+            [(5, 3), (6, 4)],  # Nodo 2
+            [(7, 4), (8, 3)],  # Nodo 3
+            [(9, 5), (10, 2)]  # Nodo 4
+        ]
+
+        nodes = [Node(i, i) for i in range(11)]
+        
+        import random
         for node in nodes:
-            node.color = random.int(3)
-            node.edges = matrix[node.id]
+            node.color = random.randint(0, 3) 
+            if node.id < len(matrix):  # Evitar índices fuera de rango
+                for neighbor, weight in matrix[node.id]:  
+                    node.add_edge(neighbor, weight)
+
         return Graph(nodes)
 
+
+    def get_graph_data(self):
+        graph = self.room_controller.get_graph()
+        nodes_data = {}
+        edges_data = {}
+
+        for node_id, node in graph.nodes.items():
+            nodes_data[node_id] = node.room # Guarda el objeto Room en el diccionario
+            edges_data[node_id] = [(neighbor, weight) for neighbor, weight in node.edges]
+
+        return {'nodes': nodes_data, 'edges': edges_data}
