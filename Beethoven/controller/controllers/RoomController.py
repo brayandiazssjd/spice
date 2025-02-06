@@ -1,8 +1,7 @@
 import json
-###
 from model.Activity import Activity
-###
 from model.Graph import Graph
+import os
 from ..factories.RoomFactory import RoomFactory
 from model.Room import Room
 from model.Wall import Wall
@@ -82,7 +81,8 @@ class RoomController:
     # FIN DEL TESTEO P MANO
 
     def upload(self, source: str, walls: List[Wall]):
-        with open(source, "r") as file:
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..","data", source))
+        with open(path, "r") as file:
             data_list = json.load(file)
         f = RoomFactory()
         self.rooms = [f.create(data) for data in data_list]
@@ -101,9 +101,12 @@ class RoomController:
             for nbr_room, wall in node.room.relations: # Accede a room.relations
                 node.add_edge(nbr_room.id, wall.isolation_rating) # Usa la relacion para crear la arista
         return Graph(nodes)
-
-    """def get_graph(self) -> Graph:
-        nodes: List[Node] = [Node(i, i) for i in range(len(self.rooms))]
-        for node in nodes:
-            node.edges = [(nbr.id, nbr.activity-wall.isolation_rating) for nbr, wall in self.rooms[node.room].relations]
-        return Graph(nodes) """
+        '''node.edges = [(nbr.id, nbr.activity.local_noise - wall.isolation_rating) for nbr, wall in self.rooms[node.room].relations]
+            node.color = 1
+            for nbr, weight in node.edges:
+                external_noise = self.rooms[nbr].activities[0].external_noise
+                if (external_noise + 5) > external_noise and external_noise > weight:
+                    node.color = 2
+                elif external_noise < weight:
+                    node.color = 3
+        return Graph(nodes) '''

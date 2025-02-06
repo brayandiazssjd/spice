@@ -1,5 +1,6 @@
 from model.Node import Node
 
+
 class Graph:
     def __init__(self, nodes):
         self.nodes = {}
