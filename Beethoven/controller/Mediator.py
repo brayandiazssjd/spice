@@ -60,3 +60,4 @@ class Mediator:
             edges_data[node_id] = [(neighbor, weight) for neighbor, weight in node.edges]
 
         return {'nodes': nodes_data, 'edges': edges_data}
+

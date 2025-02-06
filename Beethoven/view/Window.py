@@ -179,4 +179,5 @@ class Window:
                 self.mediator.cambiarAct(act_select, nodo_id)
 
     def diagnosticar(self):
-        pass
+        
+        messagebox.showinfo("")
