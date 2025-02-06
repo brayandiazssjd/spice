@@ -57,6 +57,9 @@ class Window:
         ]
         self.actividades_dict = {act["name"]: act["id"] for act in self.actividades}
 
+        # Lista de colores
+        self.colores = ["lightgreen", "yellow", "red"]
+
         # Combobox para seleccionar una actividad
         self.combobox_actividades = ttk.Combobox(self.tab1, values=list(self.actividades_dict.keys()), state="readonly")
         self.combobox_actividades.pack(pady=5)
@@ -92,14 +95,12 @@ class Window:
         # Añadir nodos y posiciones desde los datos del grafo
         for node_id, room in graph_data['nodes'].items():
             G.add_node(node_id)
-            # Asignar posiciones 3D (esto es un ejemplo, ajusta según tu necesidad)
-            # Podrías usar información de la habitación si la tienes, sino usa un diseño fijo
             piso = node_id // 4  # Ejemplo: 4 habitaciones por piso
             habitacion = node_id % 4
             x = habitacion // 2 # 0 o 1
             y = habitacion % 2  # 0 o 1
             z = piso
-            pos[node_id] = (x, y, z)  # Posiciones fijas por ahora
+            pos[node_id] = (x, y, z)
 
         # Añadir aristas desde los datos del grafo
         for node_id, edges in graph_data['edges'].items():
@@ -179,5 +180,4 @@ class Window:
                 self.mediator.cambiarAct(act_select, nodo_id)
 
     def diagnosticar(self):
-        
-        messagebox.showinfo("")
+        pass
