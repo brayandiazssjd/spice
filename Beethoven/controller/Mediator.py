@@ -48,7 +48,7 @@ class Mediator:
         id = int(id)
         room = next((room for room in self.room_controller.rooms if room.id == id), None)
         act = room.activities
-        return act
+        return [str(a) for a in act]
     
     def get_graph_data(self):
         graph = self.room_controller.get_graph()

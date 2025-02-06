@@ -11,3 +11,6 @@ class Node:
 
     def add_edge(self, nbr: int, weight: float):
         self.edges.append((nbr, weight))  # Conexión con habitación y la pared que los une
+
+    def __str__(self):
+        return f"(id={self.id}, room={str(self.room)}, color={self.color}, edges={self.edges})"

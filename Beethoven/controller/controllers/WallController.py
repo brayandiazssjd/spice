@@ -1,7 +1,11 @@
-from controller.controllers.Controller import Controller
+from typing import List
 from model.Wall import Wall
 
 
-class WallController(Controller[Wall]):
+class WallController():
     def __init__(self):
-        super().__init__()
+        self.walls: List[Wall] = []
+    
+    def upload(self):
+
+        pass    

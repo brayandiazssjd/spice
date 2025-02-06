@@ -1,7 +1,9 @@
 from model.Activity import Activity
-from .Controller import Controller
 
 
-class ActivityController(Controller[Activity]):
+class ActivityController():
     def __init__(self):
         super().__init__()
+
+    def upload(self):
+        pass
