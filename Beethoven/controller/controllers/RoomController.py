@@ -15,14 +15,14 @@ class RoomController:
     def __init__(self):
         self.rooms: list[Room] = []
         # TESTEO P
-        self.activities = [  # Lista de actividades (la misma que proporcionaste)
+        self.activities = [
             {"id": 0, "name": "Educación física", "external_noise": 40, "local_noise": 50, "start": 8, "end": 10},
             {"id": 1, "name": "Baile", "external_noise": 50, "local_noise": 60, "start": 8, "end": 10},
-            {"id": 2, "name": "Yoga", "external_noise": 30, "local_noise": 20, "start": 8, "end": 10},
+            {"id": 2, "name": "Yoga", "external_noise": 30, "local_noise": 30, "start": 8, "end": 10},
             {"id": 3, "name": "Cátedra", "external_noise": 20, "local_noise": 30, "start": 8, "end": 10},
             {"id": 4, "name": "Conferencia", "external_noise": 25, "local_noise": 35, "start": 8, "end": 10},
             {"id": 5, "name": "Debate", "external_noise": 35, "local_noise": 55, "start": 8, "end": 10},
-            {"id": 6, "name": "Laboratorio", "external_noise": 15, "local_noise": 25, "start": 8, "end": 10},
+            {"id": 6, "name": "Laboratorio", "external_noise": 15, "local_noise": 5, "start": 8, "end": 10},
             {"id": 7, "name": "Investigación", "external_noise": 20, "local_noise": 20, "start": 8, "end": 10},
             {"id": 8, "name": "Teatro", "external_noise": 35, "local_noise": 45, "start": 8, "end": 10}
         ]
@@ -111,7 +111,7 @@ class RoomController:
             node.color = 0
             for nbr, weight in node.edges:
                 external_noise = self.rooms[nbr].activities[0].external_noise
-                if (external_noise + 5) > external_noise and external_noise > weight:
+                if (external_noise + 5) > external_noise and external_noise < weight:
                     node.color = 1
                 elif external_noise < weight:
                     node.color = 2
