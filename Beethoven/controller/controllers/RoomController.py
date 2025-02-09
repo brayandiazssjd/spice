@@ -113,6 +113,8 @@ class RoomController:
                 external_noise = node.room.activities[0].external_noise
                 if (external_noise + 10) > weight and weight > external_noise:
                     node.color = 1
+                elif (external_noise + 15) > weight and weight > (external_noise + 10):
+                    node.color = 3
                 elif weight > external_noise:
                     node.color = 2
 
