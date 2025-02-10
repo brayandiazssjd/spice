@@ -15,4 +15,4 @@ class Activity:
 
     
     def __str__(self) -> str:
-        return f"(name={self.id}, local_noise={self.local_noise}, start={self.start}, end={self.end}, max_noise={self.external_noise})"
+        return f"(id={self.id}, name={self.name}, local_noise={self.local_noise}, start={self.start}, end={self.end}, max_noise={self.external_noise})"

@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -9,12 +10,14 @@ import networkx as nx
 
 class Window:
     def __init__(self, mediator):
+        self.color_nodes = []
         self.mediator = mediator
         self.root = tk.Tk()
         self.root.title("Grafo 3D con menú y selección de nodos")
         self.root.geometry("900x600")
         graph_data, self.node_dict = self.mediator.get_graph_data()  # Desempacar la tupla
         self.figura_grafo, self.G, self.pos = self.crear_grafo_3d_desde_rooms(graph_data) # Pasar graph_data
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing) # Detener programa al cerrar la ventana
 
         # Frame para el menú
         menu_frame = tk.Frame(self.root, width=250, bg="lightgray")
@@ -70,7 +73,8 @@ class Window:
         # Botones con opciones
         ttk.Button(self.tab1, text="Info", command=self.info).pack(pady=5)
         ttk.Button(self.tab1, text="Cambiar actividad", command=self.cambiarAct).pack(pady=5)
-        ttk.Button(self.tab1, text="Diagnosticar", command=self.diagnosticar).pack(pady=5)
+        ttk.Button(self.tab1, text="Diagnosticar nodo", command=self.diagnosticar).pack(pady=5)
+        ttk.Button(self.tab1, text="Optimizar", command=self.optimizar).pack(pady=5)
         
         # Frame para el grafo 3D
         self.graph_frame = tk.Frame(self.root)
@@ -119,20 +123,20 @@ class Window:
         return fig, G, pos
     
     def actualizar_colores_grafo(self):
-        self.colores = ["lightgreen", "yellow", "red"]
+        self.colores = ["lightgreen", "yellow", "red", "blue"]
         ax = self.figura_grafo.gca()
 
         for node_id, (x, y, z) in self.pos.items():
             node = self.node_dict[node_id]
-
+            self.color_nodes.append(node)
+            print("SELF.NODE_DICT OOOOOOU YEAAAAH")
+            print(node.color)
             if node and node.color is not None:
                 color_index = node.color
                 if 0 <= color_index < len(self.colores):
                     color = self.colores[color_index]
-                else:
-                    color = 'blue'
-            else:
-                color = 'blue'
+                elif color_index == -1:
+                    color = 'gray'
 
             for scatter in ax.collections:
                 try:  # Manejar la excepción si _offsets3d no está disponible
@@ -150,42 +154,6 @@ class Window:
 
         self.canvas.draw()
 
-    """
-    def crear_grafo_3d(self):
-        G = nx.Graph()
-        pisos, habitaciones_por_piso = 5, 4
-        pos = {}
-
-        # Generar nodos y posiciones en 3D
-        for piso in range(pisos):
-            z = piso
-            for i, (x, y) in enumerate([(0, 0), (0, 1), (1, 1), (1, 0)]):
-                nodo = piso * habitaciones_por_piso + i
-                pos[nodo] = (x, y, z)
-                G.add_node(nodo)
-                if i > 0:
-                    G.add_edge(nodo, nodo - 1)
-            G.add_edge(piso * habitaciones_por_piso, piso * habitaciones_por_piso + habitaciones_por_piso - 1)
-
-        for piso in range(pisos - 1):
-            for i in range(habitaciones_por_piso):
-                G.add_edge(piso * habitaciones_por_piso + i, (piso + 1) * habitaciones_por_piso + i)
-
-        # Dibujar el grafo
-        fig = plt.figure(figsize=(6, 6))
-        ax = fig.add_subplot(111, projection='3d')
-
-        # Dibujar nodos y aristas
-        for node, (x, y, z) in pos.items():
-            ax.scatter(x, y, z, c='blue', s=100)
-            ax.text(x, y, z, str(node), color='black', fontsize=14, fontweight='bold')
-        for edge in G.edges():
-            x, y, z = zip(*[pos[n] for n in edge])
-            ax.plot(x, y, z, c='black')
-
-        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])
-        return fig, G, pos"""
-
     def nodo_seleccionado(self, event):
         seleccionado = self.combobox_nodos.get()
         self.label_seleccion.config(text=f"Seleccionado: {seleccionado}")
@@ -200,9 +168,8 @@ class Window:
         if id:
             try:
                 id = int(id)
-                room = self.node_dict[id].room # Obtener el objeto Room
-                act = room.activities
-                messagebox.showinfo("Información del Nodo", f"ID: {id}\nActividad: {act}")
+                act = self.mediator.getInfo(id)
+                messagebox.showinfo("Información del Nodo", f"Actividad: {act}")
             except (ValueError, KeyError):
                 messagebox.showerror("Error", "ID de nodo inválido o no encontrado.")
         else:
@@ -215,6 +182,7 @@ class Window:
             act_select = next((act for act in self.actividades if act["name"] == nombre_actividad), None)
             if self.mediator:
                 self.mediator.cambiarAct(act_select, nodo_id)
+        self.actualizar_colores_grafo()
 
     def diagnosticar(self):
         nodo_id = self.combobox_nodos.get()
@@ -233,3 +201,15 @@ class Window:
                 messagebox.showerror("Error", "ID de nodo inválido o no encontrado.")
         else:
             messagebox.showwarning("Advertencia", "Debe seleccionar un nodo para diagnosticar.")
+
+    def optimizar(self):
+        self.mediator.optimizar(self.color_nodes)
+        graph_data, self.node_dict = self.mediator.get_graph_data()
+        self.figura_grafo, self.G, self.pos = self.crear_grafo_3d_desde_rooms(graph_data)
+        self.actualizar_colores_grafo()
+        messagebox.showinfo("Optimización", "¡Optimización del edificio completa!")
+
+    def on_closing(self):
+        if messagebox.askokcancel("Salir", "¿Seguro que quieres salir?"):
+            self.root.destroy()
+            sys.exit()

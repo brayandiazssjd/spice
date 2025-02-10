@@ -48,7 +48,10 @@ class Mediator:
         id = int(id)
         room = next((room for room in self.room_controller.rooms if room.id == id), None)
         act = room.activities
-        return [str(a) for a in act]
+        if(act[0].id!=-1):
+            return [str(a) for a in act]
+        else:
+            return "El salón no tiene ninguna actividad asignada en este momento."
     
     def diagnosticar(self, id, color) -> str:
         id = int(id)
@@ -59,6 +62,21 @@ class Mediator:
             return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe cambiar de ubicación el salón a una zona con menos ruido externo."
         elif (color==2):
             return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe reforzar las paredes con un material que aisle mucho más el ruido."
+
+    def optimizar(self, color_nodes):
+        for node in color_nodes:
+            color = node.color
+            if (color==1):
+                self.optimizarAmarilllo(node, color_nodes)
+                
+    def optimizarAmarilllo(self, node, color_nodes):
+        for node_0 in color_nodes:
+            if (node_0.color == -1 ):
+                none = node_0.room.activities
+                self.room_controller.rooms[node_0.room.id].activities = [node.room.activities]
+                self.room_controller.rooms[node.room.id].activities = [none]
+
+
 
     def get_graph_data(self):
         graph, node_dict = self.room_controller.get_graph()

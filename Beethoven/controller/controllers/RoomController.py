@@ -1,4 +1,5 @@
 import json
+import random
 from model.Activity import Activity
 from model.Graph import Graph
 import os
@@ -14,7 +15,7 @@ class RoomController:
 
     def __init__(self):
         self.rooms: list[Room] = []
-        # TESTEO P
+        self.walls: list[Wall] = []
         self.activities = [
             {"id": 0, "name": "Educación física", "external_noise": 40, "local_noise": 45, "start": 8, "end": 10},
             {"id": 1, "name": "Baile", "external_noise": 50, "local_noise": 55, "start": 8, "end": 10},
@@ -29,56 +30,39 @@ class RoomController:
         self.create_test_rooms()
 
     def create_test_rooms(self):
+
         # Crea las rooms
-        room0 = Room(0)
-        room1 = Room(1)
-        room2 = Room(2)
-        room3 = Room(3)
-        room4 = Room(4)
-        room5 = Room(5)
-        room6 = Room(6)
-        room7 = Room(7)
-        room8 = Room(8)
-        room9 = Room(9)
+        for i in range (20):
+            self.rooms.append(Room(i))
 
-        # Crea Walls de prueba
-        wall_0_1 = Wall(0, 2)  # Wall id 0, isolation 2
-        wall_0_2 = Wall(1, 3)  # Wall id 1, isolation 3
-        wall_1_3 = Wall(2, 4)  # Wall id 2, isolation 4
-        wall_1_4 = Wall(3, 1)  # Wall id 3, isolation 1
-        wall_2_5 = Wall(4, 2)  # Wall id 4, isolation 2
-        wall_2_6 = Wall(5, 3)  # Wall id 5, isolation 3
-        wall_3_7 = Wall(6, 4)  # Wall id 6, isolation 4
-        wall_3_8 = Wall(7, 1)  # Wall id 7, isolation 1
-        wall_4_9 = Wall(8, 2)  # Wall id 8, isolation 2
-        wall_4_5 = Wall(9, 3)  # Wall id 9, isolation 3
-        wall_5_6 = Wall(10, 4)  # Wall id 10, isolation 4
-        wall_6_7 = Wall(11, 1)  # Wall id 11, isolation 1
-        wall_7_8 = Wall(12, 2)  # Wall id 12, isolation 2
-        wall_8_9 = Wall(13, 3)  # Wall id 13, isolation 3
+        # Crea las walls
+        for i in range (36):
+            isolation = random.randint(1,4)
+            self.walls.append(Wall(i, isolation))
 
-        # Define las relaciones (¡usando objetos Room y Wall!)
-        room0.relations = [(room1, wall_0_1), (room2, wall_0_2)]
-        room1.relations = [(room0, wall_0_1), (room3, wall_1_3), (room4, wall_1_4)]
-        room2.relations = [(room0, wall_0_2), (room5, wall_2_5), (room6, wall_2_6)]
-        room3.relations = [(room1, wall_1_3), (room7, wall_3_7), (room8, wall_3_8)]
-        room4.relations = [(room1, wall_1_4), (room9, wall_4_9), (room5, wall_4_5)]
-        room5.relations = [(room2, wall_2_5), (room4, wall_4_5), (room6, wall_5_6)]
-        room6.relations = [(room2, wall_2_6), (room5, wall_5_6), (room7, wall_6_7)]
-        room7.relations = [(room3, wall_3_7), (room6, wall_6_7), (room8, wall_7_8)]
-        room8.relations = [(room3, wall_3_8), (room7, wall_7_8), (room9, wall_8_9)]
-        room9.relations = [(room4, wall_4_9), (room8, wall_8_9)]
-            
-        self.rooms = [room0, room1, room2, room3, room4, room5, room6, room7, room8, room9]
+        # Crea las relaciones
+        for i in range(5):
+            for j in range(0, 20, 4):
+                self.rooms[j].relations = [(self.rooms[j+1], self.walls[j]), (self.rooms[j+2], self.walls[j+1])]
+                self.rooms[j+1].relations = [(self.rooms[j], self.walls[j]), (self.rooms[j+3], self.walls[j+2])]
+                self.rooms[j+2].relations = [(self.rooms[j], self.walls[j+1]), (self.rooms[j+3], self.walls[j+3])]
+                self.rooms[j+3].relations = [(self.rooms[j+1], self.walls[j+2]), (self.rooms[j+3], self.walls[j+3])]
+                if (j+4 < len(self.rooms)):
+                    self.rooms[j].relations.append((self.rooms[j+4], self.walls[j+4]))
+                    self.rooms[j+1].relations.append((self.rooms[j+5], self.walls[j+5]))
+                    self.rooms[j+2].relations.append((self.rooms[j+6], self.walls[j+6]))
+                    self.rooms[j+3].relations.append((self.rooms[j+7], self.walls[j+7]))
 
         # Asigna actividades a las rooms (una actividad por room)
         for i, room in enumerate(self.rooms):
-            activity_index = i % len(self.activities)  # Distribuye las actividades cíclicamente
-            activity_data = self.activities[activity_index]
-            activity = Activity(activity_data["id"], name = activity_data["name"], external_noise=activity_data["external_noise"], local_noise= activity_data["local_noise"], start=activity_data["start"], end=activity_data["end"])
-            room.activities = [activity]  # Asigna la actividad a la room (en una lista)
-    
-    # FIN DEL TESTEO P MANO
+            if(i<16):
+                activity_index = i % len(self.activities)  # Distribuye las actividades cíclicamente
+                activity_data = self.activities[activity_index]
+                activity = Activity(activity_data["id"], name=activity_data["name"], external_noise=activity_data["external_noise"], local_noise=activity_data["local_noise"], start=activity_data["start"], end=activity_data["end"])
+                room.activities = [activity]
+            else:
+                activity_none = Activity(id=-1,local_noise=0 ,name="none", start=0, end=0, external_noise=0)
+                room.activities = [activity_none]
 
     def upload(self, source: str, walls: List[Wall]):
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..","data", source))
@@ -108,6 +92,9 @@ class RoomController:
         for node in nodes:
             node.edges = [(nbr.id, nbr.activities[0].local_noise - wall.isolation_rating) for nbr, wall in node.room.relations]
 
+            if(node.room.activities[0].id==-1):
+                node.color = -1
+                break
             node.color = 0
             for _, weight in node.edges:
                 external_noise = node.room.activities[0].external_noise
