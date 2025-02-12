@@ -76,6 +76,23 @@ class RoomController:
     def getHabitability(self):
         pass
 
+    def _calcular_colores_nodos(self, graph):
+        for node in graph.nodes.values():
+            if node.room.activities[0].id == -1:
+                node.color = -1
+                continue
+
+            node.color = 0  # Color por defecto
+
+            for _, weight in node.edges:  # Iterar sobre las aristas, igual que antes
+                external_noise = node.room.activities[0].external_noise
+                if (external_noise + 10) > weight and weight > external_noise:
+                    node.color = 1
+                elif (external_noise + 15) > weight and weight > (external_noise + 10):
+                    node.color = 3
+                elif weight > external_noise:
+                    node.color = 2
+
     def get_graph(self) -> Tuple[Graph, dict]:
         nodes: List[Node] = []
         node_dict = {}
@@ -92,17 +109,7 @@ class RoomController:
         for node in nodes:
             node.edges = [(nbr.id, nbr.activities[0].local_noise - wall.isolation_rating) for nbr, wall in node.room.relations]
 
-            if(node.room.activities[0].id==-1):
-                node.color = -1
-                break
-            node.color = 0
-            for _, weight in node.edges:
-                external_noise = node.room.activities[0].external_noise
-                if (external_noise + 10) > weight and weight > external_noise:
-                    node.color = 1
-                elif (external_noise + 15) > weight and weight > (external_noise + 10):
-                    node.color = 3
-                elif weight > external_noise:
-                    node.color = 2
+        graph = Graph(nodes)  # Crear el objeto Graph *antes* de calcular colores
+        self._calcular_colores_nodos(graph)  # Calcular colores *después* de crear el grafo
 
-        return Graph(nodes), node_dict
+        return graph, node_dict  # Devolver el grafo ya con los colores calculados

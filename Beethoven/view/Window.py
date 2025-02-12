@@ -204,9 +204,28 @@ class Window:
 
     def optimizar(self):
         self.mediator.optimizar(self.color_nodes)
+
         graph_data, self.node_dict = self.mediator.get_graph_data()
-        self.figura_grafo, self.G, self.pos = self.crear_grafo_3d_desde_rooms(graph_data)
+
+        # ***ACTUALIZAR LA FIGURA EXISTENTE***
+        ax = self.figura_grafo.gca()  # Obtener el axes 3D existente
+        ax.clear()  # Limpiar el axes
+
+        # Volver a dibujar los elementos del grafo en el axes limpio
+        for node_id, (x, y, z) in self.pos.items():
+            ax.scatter(x, y, z, c='blue', s=100)
+            ax.text(x, y, z, str(node_id), color='black', fontsize=14, fontweight='bold')
+
+        for edge in self.G.edges():
+            x, y, z = zip(*[self.pos[n] for n in edge])
+            ax.plot(x, y, z, c='black')
+
+        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])  # Restablecer ticks (opcional)
+
+        self.canvas.draw()  # Redibujar el canvas
+
         self.actualizar_colores_grafo()
+
         messagebox.showinfo("Optimización", "¡Optimización del edificio completa!")
 
     def on_closing(self):

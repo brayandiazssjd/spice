@@ -64,18 +64,42 @@ class Mediator:
             return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe reforzar las paredes con un material que aisle mucho más el ruido."
 
     def optimizar(self, color_nodes):
-        for node in color_nodes:
-            color = node.color
-            if (color==1):
-                self.optimizarAmarilllo(node, color_nodes)
-                
-    def optimizarAmarilllo(self, node, color_nodes):
-        for node_0 in color_nodes:
-            if (node_0.color == -1 ):
-                none = node_0.room.activities
-                self.room_controller.rooms[node_0.room.id].activities = [node.room.activities]
-                self.room_controller.rooms[node.room.id].activities = [none]
+        self.optimizar_amarillos(color_nodes)
+     
+    def optimizar_amarillos(self, color_nodes):
+        amarillos = [node for node in color_nodes if node.color == 1]
+        grises = [node for node in color_nodes if node.color == -1]
 
+        print(f"Nodos amarillos: {[nodo.room.id for nodo in amarillos]}")  # Imprime IDs de nodos amarillos
+        print(f"Nodos grises: {[nodo.room.id for nodo in grises]}")    # Imprime IDs de nodos grises
+
+        num_intercambios = min(len(amarillos), len(grises))
+
+        for i in range(num_intercambios):
+            nodo_amarillo = amarillos[i]
+            nodo_gris = grises[i]
+
+            print(f"Iteración {i}: Intercambiando nodos {nodo_amarillo.room.id} (amarillo) <-> {nodo_gris.room.id} (gris)")
+
+            if nodo_amarillo and nodo_gris:
+                actividad_amarillo = nodo_amarillo.room.activities[0]
+                actividad_gris = nodo_gris.room.activities[0]
+
+                print(f"  Actividad amarillo: {actividad_amarillo.name} (ID: {actividad_amarillo.id})")
+                print(f"  Actividad gris: {actividad_gris.name} (ID: {actividad_gris.id})")
+
+                # ***MODIFICACIÓN IMPORTANTE: Acceder a self.room_controller.rooms***
+                self.room_controller.rooms[nodo_gris.room.id].activities = [actividad_amarillo]
+                self.room_controller.rooms[nodo_amarillo.room.id].activities = [actividad_gris]
+
+                print(f"  Nuevas actividades: {self.room_controller.rooms[nodo_gris.room.id].activities[0].name} en {nodo_gris.room.id}, {self.room_controller.rooms[nodo_amarillo.room.id].activities[0].name} en {nodo_amarillo.room.id}")
+
+                amarillos[i] = None  # Elimina el nodo de la lista para no volver a iterar sobre él
+                grises[i] = None    # Elimina el nodo de la lista para no volver a iterar sobre él
+            else:
+                print("  Uno de los nodos es None. Omitiendo intercambio.")
+
+        print("Intercambios de actividades completados.")
 
 
     def get_graph_data(self):
