@@ -1,4 +1,5 @@
 import random
+from typing import List
 from model.Node import Node
 from controller.controllers.ActivityController import ActivityController
 from controller.controllers.MaterialController import MaterialController
@@ -66,7 +67,9 @@ class Mediator:
     def optimizar(self, color_nodes):
         self.optimizar_amarillos(color_nodes)
         self.optimizar_azules(color_nodes)
-
+        graph, _ = self.room_controller.get_graph()
+        self.optimize_red(graph.nodes.values())
+     
     def optimizar_amarillos(self, color_nodes):
         amarillos = [node for node in color_nodes if node.color == 1]
         grises = [node for node in color_nodes if node.color == -1]
@@ -122,3 +125,13 @@ class Mediator:
             edges_data[node_id] = [(neighbor, weight) for neighbor, weight in node.edges]
 
         return {'nodes': nodes_data, 'edges': edges_data}, node_dict  # Devuelve un *TUPLA*
+
+    def optimize_red(self, nodes_color: List[Node]):
+        red_nodes = [node for node in nodes_color if node.color == 2]
+        for node in red_nodes:
+            activity = node.room.activities[0]
+            activity.start += 2
+            activity.end += 2
+            node.color = 0
+            print(f"Chaged {node.id} to the next schedule [{activity.start}, {activity.end}]")
+
