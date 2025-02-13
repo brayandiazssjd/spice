@@ -56,13 +56,17 @@ class Mediator:
     
     def diagnosticar(self, id, color) -> str:
         id = int(id)
-        colores = ["Verde", "Amarillo", "Rojo"]
+        colores = ["Verde", "Amarillo", "Rojo", "Azul"]
         if (color==0):
             return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n El salón es habitable."
         elif (color==1):
             return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe cambiar de ubicación el salón a una zona con menos ruido externo."
         elif (color==2):
-            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe reforzar las paredes con un material que aisle mucho más el ruido."
+            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe cambiar la actividad de horario."
+        elif (color==3):
+            return f"Diagnóstico solicitado para nodo {id} con color {colores[color]}\n Debe reforzar las paredes con un material mucho más aislante."
+        else:
+            return "La habitación seleccionada no tiene actividad asignada."
 
     def optimizar(self, color_nodes):
         self.optimizar_amarillos(color_nodes)
