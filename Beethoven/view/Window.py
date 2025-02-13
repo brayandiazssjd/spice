@@ -205,7 +205,7 @@ class Window:
     def optimizar(self):
         self.mediator.optimizar(self.color_nodes)
 
-        graph_data, self.node_dict = self.mediator.get_graph_data()
+        _, self.node_dict = self.mediator.get_graph_data()
 
         # ***ACTUALIZAR LA FIGURA EXISTENTE***
         ax = self.figura_grafo.gca()  # Obtener el axes 3D existente
