@@ -65,7 +65,8 @@ class Mediator:
 
     def optimizar(self, color_nodes):
         self.optimizar_amarillos(color_nodes)
-     
+        self.optimizar_azules(color_nodes)
+
     def optimizar_amarillos(self, color_nodes):
         amarillos = [node for node in color_nodes if node.color == 1]
         grises = [node for node in color_nodes if node.color == -1]
@@ -101,6 +102,15 @@ class Mediator:
 
         print("Intercambios de actividades completados.")
 
+    def optimizar_azules(self, color_nodes):
+        azules = [node for node in color_nodes if node.color == 3]
+        paredes_visitadas = set()
+        for node in azules:
+            for relation in self.room_controller.rooms[node.room.id].relations:
+                pared = relation[1]
+                if pared not in paredes_visitadas:
+                    pared.isolation_rating += 15
+                    paredes_visitadas.add(pared)
 
     def get_graph_data(self):
         graph, node_dict = self.room_controller.get_graph()
