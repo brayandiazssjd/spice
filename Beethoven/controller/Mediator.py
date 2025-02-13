@@ -92,17 +92,16 @@ class Mediator:
                 print(f"  Actividad amarillo: {actividad_amarillo.name} (ID: {actividad_amarillo.id})")
                 print(f"  Actividad gris: {actividad_gris.name} (ID: {actividad_gris.id})")
 
-                # ***MODIFICACIÓN IMPORTANTE: Acceder a self.room_controller.rooms***
+                
                 self.room_controller.rooms[nodo_gris.room.id].activities = [actividad_amarillo]
                 self.room_controller.rooms[nodo_amarillo.room.id].activities = [actividad_gris]
 
                 print(f"  Nuevas actividades: {self.room_controller.rooms[nodo_gris.room.id].activities[0].name} en {nodo_gris.room.id}, {self.room_controller.rooms[nodo_amarillo.room.id].activities[0].name} en {nodo_amarillo.room.id}")
 
-                amarillos[i] = None  # Elimina el nodo de la lista para no volver a iterar sobre él
-                grises[i] = None    # Elimina el nodo de la lista para no volver a iterar sobre él
+                amarillos[i] = None
+                grises[i] = None  
             else:
                 print("  Uno de los nodos es None. Omitiendo intercambio.")
-
         print("Intercambios de actividades completados.")
 
     def optimizar_azules(self, color_nodes):
@@ -135,3 +134,12 @@ class Mediator:
             node.color = 0
             print(f"Chaged {node.id} to the next schedule [{activity.start}, {activity.end}]")
 
+
+    def optimizar_restantes(self, amarillos):
+        paredes_visitadas = set()
+        for node in amarillos:
+            for relation in self.room_controller.rooms[node.room.id].relations:
+                pared = relation[1]
+                if pared not in paredes_visitadas:
+                    pared.isolation_rating += 15
+                    paredes_visitadas.add(pared)

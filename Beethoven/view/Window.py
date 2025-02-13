@@ -20,7 +20,7 @@ class Window:
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing) # Detener programa al cerrar la ventana
 
         # Frame para el menú
-        menu_frame = tk.Frame(self.root, width=250, bg="lightgray")
+        menu_frame = tk.Frame(self.root, width=250, bg="black")
         menu_frame.pack(side="left", fill="y")
 
         # Notebook para las pestañas
@@ -207,6 +207,18 @@ class Window:
 
         _, self.node_dict = self.mediator.get_graph_data()
 
+        self.redibujar()
+        amarillos = []
+        for node in self.color_nodes:
+            if node.color == 1:
+                amarillos.append(node)
+        if amarillos:
+            self.mediator.optimizar_restantes(amarillos)
+            self.redibujar()
+
+        messagebox.showinfo("Optimización", "¡Optimización del edificio completa!")
+
+    def redibujar(self):
         # ***ACTUALIZAR LA FIGURA EXISTENTE***
         ax = self.figura_grafo.gca()  # Obtener el axes 3D existente
         ax.clear()  # Limpiar el axes
@@ -220,13 +232,11 @@ class Window:
             x, y, z = zip(*[self.pos[n] for n in edge])
             ax.plot(x, y, z, c='black')
 
-        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])  # Restablecer ticks (opcional)
+        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])
 
         self.canvas.draw()  # Redibujar el canvas
 
         self.actualizar_colores_grafo()
-
-        messagebox.showinfo("Optimización", "¡Optimización del edificio completa!")
 
     def on_closing(self):
         if messagebox.askokcancel("Salir", "¿Seguro que quieres salir?"):
